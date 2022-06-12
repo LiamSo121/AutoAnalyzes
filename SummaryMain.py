@@ -2,6 +2,9 @@ import pandas as pd
 import numpy as np
 from AnalyzeHelpers import AnalizeHelpers
 
+
+pd.options.mode.chained_assignment = None  # default='warn'
+
 analize_helper = AnalizeHelpers()
 # Input xlsx file
 summaryOrigin = pd.read_excel("ExcelExample.xlsx")

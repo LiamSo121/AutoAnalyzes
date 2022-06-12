@@ -1,5 +1,9 @@
 import pandas as pd
 import numpy as np
+import math
+from datetime import datetime
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 class monthlySummary:
     def create_df(self) -> pd.DataFrame:
@@ -40,8 +44,9 @@ class monthlySummary:
                 monthlySum.loc['Annual'] = np.nan
                 monthlySum.fillna('-',inplace=True)
                 monthlySum.loc['Annual','Fund'] = monthlySum.loc[12,'Fund'] + monthlySum.loc[12,'Monthly Sum']
+        summaryWithMonth = summary.copy()
         summary.drop(columns='Month',inplace=True)
-        return monthlySum
+        return monthlySum,summaryWithMonth
 
 
     def calc_sums(self,monthlySum: pd.DataFrame) -> pd.DataFrame:
@@ -57,6 +62,43 @@ class monthlySummary:
         
 
         return monthlySum
+
+    def two_weeks_summary(self,two_weeks_summary):
+        month_list = two_weeks_summary['Month'].unique()
+        for month in month_list[0:2]:
+            dates = []
+            first_pl_results = []
+
+
+            current_month_positions = two_weeks_summary[two_weeks_summary['Month'] == month]
+            current_month_positions['date'] = pd.to_datetime(current_month_positions['date'])
+            first_date_in_month =current_month_positions.iloc[0,8]
+            last_date_in_month = current_month_positions.iloc[-1,8]
+            middle_of_the_month = first_date_in_month + (last_date_in_month - first_date_in_month) / 2
+            first_two_weeks_positions = current_month_positions[current_month_positions['date'] < middle_of_the_month]
+            second_two_weeks_positions = current_month_positions[current_month_positions['date'] >= middle_of_the_month]
+            # print(first_two_weeks_positions['pl'].value_counts())
+            # print(second_two_weeks_positions['pl'].value_counts())
+            first_two_weeks_profit_num = first_two_weeks_positions[first_two_weeks_positions['pl'] == 'P'].count()['pl']
+            first_two_weeks_loses_num = first_two_weeks_positions[first_two_weeks_positions['pl'] == 'L'].count()['pl']
+            second_two_weeks_profit_num = second_two_weeks_positions[second_two_weeks_positions['pl'] == 'P'].count()['pl']
+            second_two_weeks_loses_num = second_two_weeks_positions[second_two_weeks_positions['pl'] == 'L'].count()['pl']
+
+
+       
+      
+        xlables = ['January First P','Januray second L','February first P','February second L']
+        # sns.set_style('darkgrid')
+        # sns.barplot(x= xlables,y = pl_ressults)
+        print(first_pl_results)
+        # plt.show()
+
+
+            
+
+            
+            
+            
 
 
 

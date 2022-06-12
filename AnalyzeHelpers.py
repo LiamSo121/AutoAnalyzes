@@ -20,8 +20,9 @@ class AnalizeHelpers:
 
     def stage_2(self,summary: pd.DataFrame) -> pd.DataFrame:
         yearlySum = monthSumObj.create_df()
-        yearlySum = monthSumObj.calc_monthly(summary,yearlySum)
+        yearlySum,summaryPerMonth = monthSumObj.calc_monthly(summary,yearlySum)
         yearlySum = monthSumObj.calc_sums(yearlySum)
+        monthSumObj.two_weeks_summary(summaryPerMonth)
         return yearlySum
 
     def stage_3(self,summary: pd.DataFrame):
