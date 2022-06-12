@@ -27,7 +27,7 @@ highest - highest point within the position
 lowest - lowest point within the position
 pl - P = Profit L = Lose
 stop_at - date and time for position to end
-daily change - change  in fund for each position , calculated with risk and startingFund
+change - change  in fund for each position , calculated with risk and startingFund
 present value daily - amount of money in fund for each day
 
 Summary sheet - The annual row indicates to summed up data

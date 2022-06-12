@@ -17,7 +17,7 @@ class monthlySummary:
             nextMonthData = summary[summary['Month'] == month+1]
             monthlyProfits = 0
             monthlyLoses = 0
-            for d_change in monthlyData['daily change']:
+            for d_change in monthlyData['change']:
                 if(d_change > 0):
                     monthlyProfits += d_change
                 else:
