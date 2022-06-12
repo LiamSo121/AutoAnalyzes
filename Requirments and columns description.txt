@@ -1,0 +1,38 @@
+Pre-Requirments:
+pandas - 
+numpy - 
+datetime - 
+matplotlib.pyplot - 
+seaborn - 
+
+All of the data is from 2021, positions were chosen according to one trading strategy
+
+
+Input columns:
+Data sheet:
+action - is the positions is long or short
+type - type of 1min candle
+buyPoint - price to start position
+stop loss - possible stoploss
+regular - another possible stoploss
+take profit - take the money if price hits 
+quantity - quantity of shates for position
+date - date of  position
+time - time of find position candle
+gap - defference between today opening price to testerday closing price
+bp_filled_at - date and time to enter a position
+cost - cost of position
+leverage cost - cost after 1:4 leverage
+highest - highest point within the position
+lowest - lowest point within the position
+pl - P = Profit L = Lose
+stop_at - date and time for position to end
+daily change - change  in fund for each position , calculated with risk and startingFund
+present value daily - amount of money in fund for each day
+
+Summary sheet - The annual row indicates to summed up data
+
+type distribution - data groupedby types of candles
+
+Profit By time - profit positions in 30 Min intervals
+loses by time - loses positions in 30 Min intervals
