@@ -21,6 +21,7 @@ class GroupBy:
     def groupByType(self,summary: pd.DataFrame):
         types = summary['type'].unique()
         summaryGroupedByType = summary.groupby(by=['type','pl'])['pl'].count()
+        
         return summaryGroupedByType
 
 

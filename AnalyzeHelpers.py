@@ -22,23 +22,23 @@ class AnalizeHelpers:
         yearlySum = monthSumObj.create_df()
         yearlySum,summaryPerMonth = monthSumObj.calc_monthly(summary,yearlySum)
         yearlySum = monthSumObj.calc_sums(yearlySum)
-        monthSumObj.two_weeks_summary(summaryPerMonth)
-        return yearlySum
+        hit_by_two_weeks = monthSumObj.two_weeks_summary(summaryPerMonth)
+        return yearlySum,hit_by_two_weeks
 
     def stage_3(self,summary: pd.DataFrame):
         groupByType = groupObj.groupByType(summary)
         profitsBy30Min,losesBy30Min = groupObj.groupByTime(summary)
         return groupByType,profitsBy30Min,losesBy30Min
 
-    def stage_4(self,summary,yearlySum,groupByType,profitsBy30Min,losesBy30Min):
+    def stage_4(self,summary,yearlySum,groupByType,profitsBy30Min,losesBy30Min,hit_by_two_weeks):
         # Output xlsx file name
         writer = pd.ExcelWriter('outputExample.xlsx', engine='xlsxwriter')
-        
         summary.to_excel(writer,sheet_name="Data")
         yearlySum.to_excel(writer,sheet_name="Summary")
         groupByType.to_excel(writer,sheet_name="Type Distribution")
         profitsBy30Min.to_excel(writer,sheet_name= "Profits By Time")
         losesBy30Min.to_excel(writer,sheet_name= "Loses By Time")
+        hit_by_two_weeks.to_excel(writer,sheet_name= 'Hit Perc By Two Weeks')
         writer.save()
 
         

@@ -63,35 +63,38 @@ class monthlySummary:
 
         return monthlySum
 
-    def two_weeks_summary(self,two_weeks_summary):
-        month_list = two_weeks_summary['Month'].unique()
-        for month in month_list[0:2]:
-            dates = []
-            first_pl_results = []
-
-
-            current_month_positions = two_weeks_summary[two_weeks_summary['Month'] == month]
+    def two_weeks_summary(self,summary):
+        month_list = summary['Month'].unique()
+        i = 0
+        pl_results = {}
+        lables = ['January 1','Januray 2','February 1','February 2','March 1','March 2','April 1','April 2','May 1','May 2','June 1','June 2','July 1','July 2',
+                    'August 1','August 2','September 1','September 2','October 1','October 2','November 1','November 2','December 1','December 2']
+        for month in month_list:
+            current_month_positions = summary[summary['Month'] == month]
             current_month_positions['date'] = pd.to_datetime(current_month_positions['date'])
             first_date_in_month =current_month_positions.iloc[0,8]
             last_date_in_month = current_month_positions.iloc[-1,8]
             middle_of_the_month = first_date_in_month + (last_date_in_month - first_date_in_month) / 2
             first_two_weeks_positions = current_month_positions[current_month_positions['date'] < middle_of_the_month]
             second_two_weeks_positions = current_month_positions[current_month_positions['date'] >= middle_of_the_month]
-            # print(first_two_weeks_positions['pl'].value_counts())
-            # print(second_two_weeks_positions['pl'].value_counts())
             first_two_weeks_profit_num = first_two_weeks_positions[first_two_weeks_positions['pl'] == 'P'].count()['pl']
             first_two_weeks_loses_num = first_two_weeks_positions[first_two_weeks_positions['pl'] == 'L'].count()['pl']
             second_two_weeks_profit_num = second_two_weeks_positions[second_two_weeks_positions['pl'] == 'P'].count()['pl']
             second_two_weeks_loses_num = second_two_weeks_positions[second_two_weeks_positions['pl'] == 'L'].count()['pl']
+            pl_results[lables[i]] = round((first_two_weeks_profit_num / (first_two_weeks_loses_num + first_two_weeks_profit_num) * 100),2)
+            pl_results[lables[i+1]] = round((second_two_weeks_profit_num / (second_two_weeks_loses_num + second_two_weeks_profit_num) * 100),2)
+            i += 2
+        print(pl_results)
+        pl_dataFrame = pd.DataFrame(pl_results,index=pl_results.keys())
+        pl_dataFrame = pl_dataFrame.iloc[0,:]
+        #sns.set_style('white grid')
+        sns.barplot(x=lables,y=pl_dataFrame,c=['red','black'])
+        plt.show()
 
+        return pl_dataFrame
 
        
-      
-        xlables = ['January First P','Januray second L','February first P','February second L']
-        # sns.set_style('darkgrid')
-        # sns.barplot(x= xlables,y = pl_ressults)
-        print(first_pl_results)
-        # plt.show()
+       
 
 
             
