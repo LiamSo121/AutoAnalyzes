@@ -58,15 +58,15 @@ class monthlySummary:
         monthlySum.loc['Annual','Lose Pos Number'] = monthlySum['Lose Pos Number'].drop('Annual',axis=0).sum()
         monthlySum.loc['Annual','Hit Percentage'] = round((monthlySum.loc['Annual','Profit Pos Number'] / monthlySum.loc['Annual','Positions Number']) * 100,2)
         monthlySum.loc['Annual','Yield Percantage'] = monthlySum['Yield Percantage'].drop('Annual',axis=0).sum()
-        
-        
-
         return monthlySum
 
     def two_weeks_summary(self,summary):
         month_list = summary['Month'].unique()
         i = 0
-        pl_results = {}
+        hit_percentage_list = []
+        number_of_profits_list = []
+        number_of_loses_list = []
+        
         lables = ['January 1','Januray 2','February 1','February 2','March 1','March 2','April 1','April 2','May 1','May 2','June 1','June 2','July 1','July 2',
                     'August 1','August 2','September 1','September 2','October 1','October 2','November 1','November 2','December 1','December 2']
         for month in month_list:
@@ -81,21 +81,23 @@ class monthlySummary:
             first_two_weeks_loses_num = first_two_weeks_positions[first_two_weeks_positions['pl'] == 'L'].count()['pl']
             second_two_weeks_profit_num = second_two_weeks_positions[second_two_weeks_positions['pl'] == 'P'].count()['pl']
             second_two_weeks_loses_num = second_two_weeks_positions[second_two_weeks_positions['pl'] == 'L'].count()['pl']
-            pl_results[lables[i]] = round((first_two_weeks_profit_num / (first_two_weeks_loses_num + first_two_weeks_profit_num) * 100),2)
-            pl_results[lables[i+1]] = round((second_two_weeks_profit_num / (second_two_weeks_loses_num + second_two_weeks_profit_num) * 100),2)
-            i += 2
-        print(pl_results)
-        pl_dataFrame = pd.DataFrame(pl_results,index=pl_results.keys())
-        pl_dataFrame = pl_dataFrame.iloc[0,:]
-        #sns.set_style('white grid')
-        sns.barplot(x=lables,y=pl_dataFrame,c=['red','black'])
-        plt.show()
+            number_of_profits_list.append(first_two_weeks_profit_num)
+            number_of_profits_list.append(second_two_weeks_profit_num)
+            number_of_loses_list.append(first_two_weeks_loses_num)
+            number_of_loses_list.append(second_two_weeks_loses_num)
+            hit_percentage_list.append(round((first_two_weeks_profit_num / (first_two_weeks_loses_num + first_two_weeks_profit_num) * 100),2))
+            hit_percentage_list.append(round((second_two_weeks_profit_num / (second_two_weeks_loses_num + second_two_weeks_profit_num) * 100),2))
+        pl_df = pd.DataFrame(columns=['Month','Hit Percentage','Number Of Profits','Number Of Loses'])
+        pl_df['Month'] = lables
+        pl_df['Hit Percentage'] = hit_percentage_list
+        pl_df['Number Of Profits'] = number_of_profits_list
+        pl_df['Number Of Loses'] = number_of_loses_list
 
-        return pl_dataFrame
+        return pl_df
 
        
        
-
+    #def distribution_by_month_and_time(self,summary_by_month):    
 
             
 
