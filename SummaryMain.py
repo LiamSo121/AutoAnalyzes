@@ -18,11 +18,11 @@ fund = 30960
 # Stage 1 - Analyze daily positions
 summary = analize_helper.add_daily_change(summary,risk,fund)
 # Stage 2 - Analize Monthly
-yearlySum,hit_by_two_weeks = analize_helper.calc_yearly(summary)
+yearlySum,by_period_df = analize_helper.calc_yearly(summary)
 # Stage 3 - Grouping By
 groupByType,profitsBy30Min,losesBy30Min = analize_helper.stage_3(summary)
 # Stage 4 - Export all the data to xlsx file
-analize_helper.export_to_excel(summary,yearlySum,groupByType,profitsBy30Min,losesBy30Min,hit_by_two_weeks)
+analize_helper.export_to_excel(summary,yearlySum,groupByType,profitsBy30Min,losesBy30Min,by_period_df)
 
 
 

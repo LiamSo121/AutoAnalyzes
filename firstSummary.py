@@ -26,7 +26,7 @@ class summaryAutomation:
             daily_fund_risk = fund * risk
             daily_fund_risk = round(daily_fund_risk,2)
             summary['change'].mask((summary['date'] == date) & (summary['pl'] == 'P'),daily_fund_risk,inplace= True)
-            summary['change'].mask((summary['date'] == date) & (summary['pl'] == 'L'),daily_fund_risk * -1,inplace= True)
+            summary['change'].mask((summary['date'] == date) & (summary['pl'] == 'L'),daily_fund_risk * (-1),inplace= True)
             profits_num = summary[(summary['date'] == date) & (summary['pl'] == 'P')].shape[0]
             loses_num = summary[(summary['date'] == date) & (summary['pl'] == 'L')].shape[0]
             daily_change = (profits_num - loses_num) * daily_fund_risk
