@@ -19,19 +19,20 @@ class AnalizeHelpers:
         return summary
 
     def calc_yearly(self,summary: pd.DataFrame) -> pd.DataFrame:
-        yearlySum = monthSumObj.create_df()
-        yearlySum,summaryPerMonth = monthSumObj.calc_monthly(summary,yearlySum)
-        yearlySum = monthSumObj.calc_sums(yearlySum)
+        anuual_summary = monthSumObj.create_df()
+        anuual_summary,summaryPerMonth = monthSumObj.calc_monthly(summary,anuual_summary)
+        anuual_summary = monthSumObj.calc_annual_sums(anuual_summary)
         # n = number of days to split the month
-        by_period_df = monthSumObj.distribution_by_month_and_time(summaryPerMonth,5)
-        return yearlySum,by_period_df
+        n_days_summary = monthSumObj.n_days_distribution(summaryPerMonth,5)
+        hit_perc_by_30_minutes = monthSumObj.n_days_30_minutes_distribution_without_winter_time_dates(summaryPerMonth,5)
+        return anuual_summary,n_days_summary,hit_perc_by_30_minutes
 
-    def stage_3(self,summary: pd.DataFrame) -> pd.DataFrame:
+    def group_by(self,summary: pd.DataFrame) -> pd.DataFrame:
         groupByType = groupObj.groupByType(summary)
         profitsBy30Min,losesBy30Min = groupObj.groupByTime(summary)
         return groupByType,profitsBy30Min,losesBy30Min
 
-    def export_to_excel(self,summary,yearlySum,groupByType,profitsBy30Min,losesBy30Min,by_period_df):
+    def export_to_excel(self,summary,yearlySum,groupByType,profitsBy30Min,losesBy30Min,by_period_df,hit_by_30_minutes):
         # Output xlsx file name
         writer = pd.ExcelWriter('orders-1-1-stop-lossLiam.xlsx', engine='xlsxwriter')
         summary.to_excel(writer,sheet_name="Data")
@@ -40,6 +41,7 @@ class AnalizeHelpers:
         profitsBy30Min.to_excel(writer,sheet_name= "Profits By Time")
         losesBy30Min.to_excel(writer,sheet_name= "Loses By Time")
         by_period_df.to_excel(writer,sheet_name= 'Splitted Month Summary')
+        hit_by_30_minutes.to_excel(writer, sheet_name = 'Hit By 30 Minutes')
         writer.save()
 
         
