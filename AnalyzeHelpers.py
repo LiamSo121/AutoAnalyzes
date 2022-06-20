@@ -19,14 +19,14 @@ class AnalizeHelpers:
         return summary
 
     def calc_yearly(self,summary: pd.DataFrame) -> pd.DataFrame:
-        yearlySum = monthSumObj.create_df()
-        yearlySum,summaryPerMonth = monthSumObj.calc_monthly(summary,yearlySum)
-        yearlySum = monthSumObj.calc_sums(yearlySum)
+        anuual_summary = monthSumObj.create_df()
+        anuual_summary,summaryPerMonth = monthSumObj.calc_monthly(summary,anuual_summary)
+        anuual_summary = monthSumObj.calc_annual_sums(anuual_summary)
         # n = number of days to split the month
-        by_period_df = monthSumObj.distribution_by_month_and_time(summaryPerMonth,5)
-        return yearlySum,by_period_df
+        n_days_summary = monthSumObj.n_days_distribution(summaryPerMonth,5)
+        return anuual_summary,n_days_summary
 
-    def stage_3(self,summary: pd.DataFrame) -> pd.DataFrame:
+    def group_by(self,summary: pd.DataFrame) -> pd.DataFrame:
         groupByType = groupObj.groupByType(summary)
         profitsBy30Min,losesBy30Min = groupObj.groupByTime(summary)
         return groupByType,profitsBy30Min,losesBy30Min
