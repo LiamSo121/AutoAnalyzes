@@ -1,3 +1,4 @@
+from email.errors import StartBoundaryNotFoundDefect
 import pandas as pd
 import numpy as np
 import math
@@ -71,11 +72,6 @@ class monthlySummary:
         number_of_loses_list = []
         for month in month_list:
             current_month_positions = summary_by_month[summary_by_month['Month'] == month]
-            profits,loses = GroupBy.groupByTime(GroupBy,current_month_positions)
-            print(profits[0],profits[1])
-            print(profits)
-            print(loses[0],loses[1])
-            print(loses)
             dates_list = current_month_positions['date'].unique()
             split_date = dates_list[n-1]
             first_period_positions = current_month_positions[current_month_positions['date'] < split_date]
@@ -90,6 +86,7 @@ class monthlySummary:
             number_of_loses_list.append(second_period_loses_num)
             hit_percentage_list.append(round((first_period_profits_num / (first_period_loses_num + first_period_profits_num) * 100),2))
             hit_percentage_list.append(round((second_period_profits_num / (second_period_loses_num + second_period_profits_num) * 100),2))
+            
         pl_df = pd.DataFrame(columns=['Month','Hit Percentage','Number Of Profits','Number Of Loses'])
         pl_df['Month'] = lables
         pl_df['Hit Percentage'] = hit_percentage_list
@@ -98,7 +95,63 @@ class monthlySummary:
 
         return pl_df
 
+    def n_days_30_minutes_distribution_without_winter_time_dates(self,summary_by_month: pd.DataFrame, n: int):
+        months_names = ['January','February','March','April','May','June','July',
+                    'August','September','October','November','December']
+        summary_by_month = monthlySummary.remove_problem_dates(self,summary_by_month)
+        summary_by_month['30Min Split'] = pd.to_datetime('2021-04-01' + " " + summary_by_month['time'])
+        month_list = summary_by_month['Month'].unique()
+        month_num = 0
+        for month in month_list:
+            current_month_positions = summary_by_month[summary_by_month['Month'] == month]
+            month_profits = current_month_positions[current_month_positions['pl'] == 'P']
+            month_loses = current_month_positions[current_month_positions['pl'] == 'L']
+            month_profits_by_30_min = month_profits.resample('30Min',on='30Min Split')
+            month_loses_by_30_min = month_loses.resample('30Min',on='30Min Split')
+            profits_num = month_profits_by_30_min['pl'].count()
+            if(month == 1):
+                df = pd.DataFrame(columns= months_names)
+            loses_num = month_loses_by_30_min['pl'].count()
+            profits_length = len(profits_num)
+            loses_length = len(loses_num)
+            print(month)
+            print("profit",profits_num,"loses",loses_num)
+            month_hit_perc = []
+            if(profits_length == loses_length):
+                for i in range(profits_length):
+                    hit_perc = round(profits_num[i] / (profits_num[i] + loses_num[i]) * 100,2)
+                    month_hit_perc.append(hit_perc)
+            elif (profits_length > loses_length):
+                diff = profits_length - loses_length
+                for i in range(loses_length):
+                    hit_perc = round(profits_num[i] / (profits_num[i] + loses_num[i]) * 100,2)
+                    month_hit_perc.append(hit_perc)
+                for i in range(diff):
+                    hit_perc = 100
+                    month_hit_perc.append(hit_perc)
+            else:
+                diff = loses_length - profits_length
+                for i in range(profits_length):
+                    hit_perc = round(profits_num[i] / (profits_num[i] + loses_num[i]) * 100,2)
+                    month_hit_perc.append(hit_perc)
+                for i in range(diff):
+                    hit_perc = 0
+                    month_hit_perc.append(hit_perc)
+            df[months_names[month_num]] = month_hit_perc
+            month_num += 1
+        return df
+            
 
+            
+            
+    def remove_problem_dates(self, summary_by_month: pd.DataFrame):
+        summary_by_month['date'] = pd.to_datetime(summary_by_month['date'])
+        problemDates = ['2021-03-15','2021-03-16','2021-03-17','2021-03-19','2021-03-22','2021-03-23','2021-03-24','2021-03-25','2021-11-01','2021-11-02','2021-11-03','2021-11-04','2021-11-05']
+        problemDates = pd.to_datetime(problemDates)
+        for date in problemDates:
+            summary_by_month = summary_by_month[summary_by_month['date'] != date]
+        
+        return summary_by_month
 
             
 
