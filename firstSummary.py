@@ -39,6 +39,12 @@ class summaryAutomation:
         return summary
 
 
+    def fix_additional_columns(self,summary: pd.DataFrame) -> pd.DataFrame:
+        try:
+            summary.drop(columns=['Unnamed: 25','Unnamed: 26','Unnamed: 27'],inplace=True)
+            return summary
+        except Exception as e:
+            print(e)
 
 
 

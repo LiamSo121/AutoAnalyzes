@@ -15,6 +15,7 @@ class AnalizeHelpers:
         summary = summaryObj.fix_data(summary)
         summary = summaryObj.clean_data(summary)
         summary = summaryObj.calculate_pl(summary,risk,fund)
+        summary = summaryObj.fix_additional_columns(summary)
 
         return summary
 
@@ -34,7 +35,7 @@ class AnalizeHelpers:
 
     def export_to_excel(self,summary,yearlySum,groupByType,profitsBy30Min,losesBy30Min,by_period_df,hit_by_30_minutes):
         # Output xlsx file name
-        writer = pd.ExcelWriter('orders-1-1-stop-lossLiam.xlsx', engine='xlsxwriter')
+        writer = pd.ExcelWriter('continuesLiam.xlsx', engine='xlsxwriter')
         summary.to_excel(writer,sheet_name="Data")
         yearlySum.to_excel(writer,sheet_name="Summary")
         groupByType.to_excel(writer,sheet_name="Type Distribution")
