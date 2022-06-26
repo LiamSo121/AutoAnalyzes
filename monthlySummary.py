@@ -188,6 +188,7 @@ class monthlySummary:
             month_num += 1
         df = assist.fix_hourly_index(df)
         df = assist.calc_avg(df)
+        df = df.transpose()
         return df
 
  
