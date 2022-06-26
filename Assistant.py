@@ -4,15 +4,10 @@ from datetime import datetime, timedelta
 
 class Assistant:
     def calc_avg(self,df):
+        df['Hourly Avg'] = round(df.mean(axis=1),2)
         df.loc['Avg'] = np.nan
         for col in df.columns:
             df.loc['Avg',col] = round(df[col].mean(),2)
-
-        df['Hourly Avg'] = round(df.mean(axis=1),2)
-    
-
-        print(df)
-
         return df
 
     def remove_problem_dates(self, summary_by_month: pd.DataFrame):
