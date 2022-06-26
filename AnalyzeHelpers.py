@@ -25,15 +25,16 @@ class AnalizeHelpers:
         anuual_summary = monthSumObj.calc_annual_sums(anuual_summary)
         # n = number of days to split the month
         n_days_summary = monthSumObj.n_days_distribution(summaryPerMonth,5)
-        hit_perc_by_30_minutes = monthSumObj.n_days_30_minutes_distribution_without_winter_time_dates(summaryPerMonth,5)
-        return anuual_summary,n_days_summary,hit_perc_by_30_minutes
+        hit_perc_by_30_minutes = monthSumObj.half_hour_distribution(summaryPerMonth,5)
+        hourly_hit_percentage = monthSumObj.hour_distribution(summaryPerMonth)
+        return anuual_summary,n_days_summary,hit_perc_by_30_minutes,hourly_hit_percentage
 
     def group_by(self,summary: pd.DataFrame) -> pd.DataFrame:
         groupByType = groupObj.groupByType(summary)
         profitsBy30Min,losesBy30Min = groupObj.groupByTime(summary)
         return groupByType,profitsBy30Min,losesBy30Min
 
-    def export_to_excel(self,summary,yearlySum,groupByType,profitsBy30Min,losesBy30Min,by_period_df,hit_by_30_minutes):
+    def export_to_excel(self,summary,yearlySum,groupByType,profitsBy30Min,losesBy30Min,by_period_df,hit_by_30_minutes,hourly_df):
         # Output xlsx file name
         writer = pd.ExcelWriter('continuesLiam.xlsx', engine='xlsxwriter')
         summary.to_excel(writer,sheet_name="Data")
@@ -43,6 +44,7 @@ class AnalizeHelpers:
         losesBy30Min.to_excel(writer,sheet_name= "Loses By Time")
         by_period_df.to_excel(writer,sheet_name= 'Splitted Month Summary')
         hit_by_30_minutes.to_excel(writer, sheet_name = 'Hit By 30 Minutes')
+        hourly_df.to_excel(writer,sheet_name = 'Hit By 1 Hour')
         writer.save()
 
         
