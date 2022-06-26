@@ -65,7 +65,7 @@ class monthlySummary:
         monthlySum.loc['Annual','Yield Percantage'] = monthlySum['Yield Percantage'].drop('Annual',axis=0).sum()
         return monthlySum
        
-    def n_days_distribution(self,summary_by_month:pd.DataFrame,n: int):
+    def n_days_distribution(self,summary_by_month:pd.DataFrame,n: int) -> pd.DataFrame:
         month_list = summary_by_month['Month'].unique()
         summary_by_month['date'] = pd.to_datetime(summary_by_month['date'])
         lables = ['January 1','Januray 2','February 1','February 2','March 1','March 2','April 1','April 2','May 1','May 2','June 1','June 2','July 1','July 2',
@@ -98,7 +98,7 @@ class monthlySummary:
 
         return pl_df
 
-    def half_hour_distribution(self,summary_by_month: pd.DataFrame, n: int):
+    def half_hour_distribution(self,summary_by_month: pd.DataFrame, n: int) -> pd.DataFrame:
         months_names = ['January','February','March','April','May','June','July',
                     'August','September','October','November','December']
         summary_by_month = assist.remove_problem_dates(summary_by_month)
@@ -144,7 +144,7 @@ class monthlySummary:
             #df = assist.calc_avg(df)
         return df
 
-    def hour_distribution(self,summary_by_month):
+    def hour_distribution(self,summary_by_month) -> pd.DataFrame:
         months_names = ['January','February','March','April','May','June','July',
                     'August','September','October','November','December']
         summary_by_month = assist.remove_problem_dates(summary_by_month)

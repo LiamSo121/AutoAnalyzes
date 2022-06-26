@@ -33,9 +33,6 @@ class summaryAutomation:
             fund += daily_change
             rowNumber = summary[summary['date'] == date].index[-1]
             summary.loc[rowNumber,'present value daily'] = round(startOfTheDayFund)
-
-
-
         return summary
 
 
