@@ -15,6 +15,7 @@ class AnalizeHelpers:
         summary = summaryObj.fix_data(summary)
         summary = summaryObj.clean_data(summary)
         summary = summaryObj.calculate_pl(summary,risk,fund)
+        summary = summaryObj.fix_additional_columns(summary)
 
         return summary
 
@@ -32,6 +33,7 @@ class AnalizeHelpers:
     def group_by(self,summary: pd.DataFrame) -> pd.DataFrame:
         groupByType = groupObj.groupByType(summary)
         profitsBy30Min,losesBy30Min = groupObj.groupByTime(summary)
+
         return groupByType,profitsBy30Min,losesBy30Min
 
     def export_to_excel(self,summary,yearlySum,groupByType,profitsBy30Min,losesBy30Min,by_period_df,hit_by_30_minutes,hit_perc_by_1_hour):
