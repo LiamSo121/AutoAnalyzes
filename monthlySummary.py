@@ -1,4 +1,5 @@
 from email.errors import StartBoundaryNotFoundDefect
+from statistics import mean
 import pandas as pd
 import numpy as np
 import math
@@ -11,6 +12,8 @@ from Assistant import Assistant
 assist = Assistant()
 
 class monthlySummary:
+    
+
     def create_df(self) -> pd.DataFrame:
         cols = ['Months','Profit','Lose','Monthly Sum','Positions Number','Profit Pos Number','Lose Pos Number','Hit Percentage','Yield Percantage','Fund']
         monthlySum = pd.DataFrame(columns= cols).set_index('Months') 
@@ -47,7 +50,7 @@ class monthlySummary:
             annual_summary.loc[month,'Fund'] = round(startOfMonthFund,2)
             if (month == 12):
                 annual_summary.loc['Annual'] = np.nan
-                annual_summary.fillna('-',inplace=True)
+                #annual_summary.fillna('0',inplace=True)
                 annual_summary.loc['Annual','Fund'] = annual_summary.loc[12,'Fund'] + annual_summary.loc[12,'Monthly Sum']
         summaryWithMonth = summary.copy()
         summary.drop(columns='Month',inplace=True)
@@ -61,7 +64,9 @@ class monthlySummary:
         monthlySum.loc['Annual','Monthly Sum'] = monthlySum['Monthly Sum'].drop('Annual',axis=0).sum()
         monthlySum.loc['Annual','Profit Pos Number'] = monthlySum['Profit Pos Number'].drop('Annual',axis=0).sum()
         monthlySum.loc['Annual','Lose Pos Number'] = monthlySum['Lose Pos Number'].drop('Annual',axis=0).sum()
-        monthlySum.loc['Annual','Hit Percentage'] = round((monthlySum.loc['Annual','Profit Pos Number'] / monthlySum.loc['Annual','Positions Number']) * 100,2)
+        monthlySum['Hit Percentage'] = monthlySum['Hit Percentage'].astype(float)
+        hit_mean = round(monthlySum['Hit Percentage'].mean(),2)
+        monthlySum.loc['Annual','Hit Percentage'] = hit_mean
         monthlySum.loc['Annual','Yield Percantage'] = monthlySum['Yield Percantage'].drop('Annual',axis=0).sum()
         return monthlySum
        
@@ -98,7 +103,7 @@ class monthlySummary:
 
         return pl_df
 
-    def half_hour_distribution(self,summary_by_month: pd.DataFrame, n: int) -> pd.DataFrame:
+    def half_hour_distribution(self,summary_by_month: pd.DataFrame) -> pd.DataFrame:
         months_names = ['January','February','March','April','May','June','July',
                     'August','September','October','November','December']
         summary_by_month = assist.remove_problem_dates(summary_by_month)

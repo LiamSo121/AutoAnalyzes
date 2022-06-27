@@ -16,7 +16,7 @@ class AnalizeHelpers:
         summary = firstStg.clean_data(summary)
         summary = firstStg.calculate_pl(summary,risk,fund)
         summary = firstStg.fix_additional_columns(summary)
-
+        
         return summary
 
     def calc_yearly(self,summary: pd.DataFrame) -> pd.DataFrame:
@@ -25,7 +25,7 @@ class AnalizeHelpers:
         anuual_summary = secondStg.calc_annual_sums(anuual_summary)
         # n = number of days to split the month
         n_days_summary = secondStg.n_days_distribution(summaryPerMonth,5)
-        hit_perc_by_30_minutes = secondStg.half_hour_distribution(summaryPerMonth,5)
+        hit_perc_by_30_minutes = secondStg.half_hour_distribution(summaryPerMonth)
         hourly_hit_percentage = secondStg.hour_distribution(summaryPerMonth)
         return anuual_summary,n_days_summary,hit_perc_by_30_minutes,hourly_hit_percentage
 
@@ -35,18 +35,18 @@ class AnalizeHelpers:
         return groupByType,profitsBy30Min,losesBy30Min
 
 
-
-    def export_to_excel(self,to_excel_list: pd.DataFrame) -> None:
+    def export_to_excel(self,export_list):
         sheet_names_list = ['Data','Summary','Type Distribution','Profits By Time','Loses By Time','Splitted Month Summary','Hit By 30 Minutes','Hit By 1 Hour']
         writer = pd.ExcelWriter('continuesLiam.xlsx', engine='xlsxwriter')
         i = 0
-
-        for excel_sheet in to_excel_list:
+        for excel_sheet in export_list:
+            print(type(excel_sheet))
             excel_sheet.to_excel(writer,sheet_name = sheet_names_list[i])
             i += 1
-
         writer.save()
-        
 
-# change function to fit list of dataframes to export
+  
+
+
+
 
