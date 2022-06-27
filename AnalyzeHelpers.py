@@ -34,17 +34,14 @@ class AnalizeHelpers:
         profitsBy30Min,losesBy30Min = groupObj.groupByTime(summary)
         return groupByType,profitsBy30Min,losesBy30Min
 
-    def export_to_excel(self,summary,yearlySum,groupByType,profitsBy30Min,losesBy30Min,by_period_df,hit_by_30_minutes,hourly_df):
+    def export_to_excel(self,export_list):
+        sheets_names = ['Data','Summary','Type Distribution','Profits By Time','Loses By Time','Splitted Month Summary','Hit By 30 Minutes','Hit By 1 Hour']
         # Output xlsx file name
         writer = pd.ExcelWriter('continuesLiam.xlsx', engine='xlsxwriter')
-        summary.to_excel(writer,sheet_name="Data")
-        yearlySum.to_excel(writer,sheet_name="Summary")
-        groupByType.to_excel(writer,sheet_name="Type Distribution")
-        profitsBy30Min.to_excel(writer,sheet_name= "Profits By Time")
-        losesBy30Min.to_excel(writer,sheet_name= "Loses By Time")
-        by_period_df.to_excel(writer,sheet_name= 'Splitted Month Summary')
-        hit_by_30_minutes.to_excel(writer, sheet_name = 'Hit By 30 Minutes')
-        hourly_df.to_excel(writer,sheet_name = 'Hit By 1 Hour')
+        i = 0
+        for file in export_list:
+            file.to_excel(writer,sheet_name= sheets_names[i])
+            i += 1
         writer.save()
 
         

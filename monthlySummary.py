@@ -47,7 +47,6 @@ class monthlySummary:
             annual_summary.loc[month,'Fund'] = round(startOfMonthFund,2)
             if (month == 12):
                 annual_summary.loc['Annual'] = np.nan
-                annual_summary.fillna('-',inplace=True)
                 annual_summary.loc['Annual','Fund'] = annual_summary.loc[12,'Fund'] + annual_summary.loc[12,'Monthly Sum']
         summaryWithMonth = summary.copy()
         summary.drop(columns='Month',inplace=True)
@@ -61,7 +60,7 @@ class monthlySummary:
         monthlySum.loc['Annual','Monthly Sum'] = monthlySum['Monthly Sum'].drop('Annual',axis=0).sum()
         monthlySum.loc['Annual','Profit Pos Number'] = monthlySum['Profit Pos Number'].drop('Annual',axis=0).sum()
         monthlySum.loc['Annual','Lose Pos Number'] = monthlySum['Lose Pos Number'].drop('Annual',axis=0).sum()
-        monthlySum.loc['Annual','Hit Percentage'] = round((monthlySum.loc['Annual','Profit Pos Number'] / monthlySum.loc['Annual','Positions Number']) * 100,2)
+        monthlySum.loc['Annual','Hit Percentage'] = round(monthlySum['Hit Percentage'].mean(),2)
         monthlySum.loc['Annual','Yield Percantage'] = monthlySum['Yield Percantage'].drop('Annual',axis=0).sum()
         return monthlySum
        
