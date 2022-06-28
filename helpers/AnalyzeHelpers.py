@@ -1,8 +1,8 @@
 import pandas as pd
 import numpy as np
-from firstSummary import summaryAutomation
-from monthlySummary import monthlySummary
-from GroupBy import GroupBy
+from Processes.firstSummary import summaryAutomation
+from Processes.monthlySummary import monthlySummary
+from Processes.GroupBy import GroupBy
 
 
 monthSumObj = monthlySummary()

@@ -5,8 +5,8 @@ import math
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 import seaborn as sns
-from GroupBy import GroupBy
-from Assistant import Assistant
+from Processes.GroupBy import GroupBy
+from helpers.Assistant import Assistant
 
 assist = Assistant()
 
