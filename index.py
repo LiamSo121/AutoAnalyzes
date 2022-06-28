@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from AnalyzeHelpers import AnalizeHelpers
+from helpers.AnalyzeHelpers import AnalizeHelpers
 
 
 pd.options.mode.chained_assignment = None  # default='warn'
@@ -11,7 +11,7 @@ summaryOrigin = pd.read_excel("continues.xlsx")
 summary = summaryOrigin.copy()
 
 # Define risk percantage
-risk = 0.005
+risk = 0.009
 # Define Starting Fund
 fund = 30960
 
