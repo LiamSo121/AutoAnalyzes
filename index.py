@@ -23,8 +23,13 @@ yearlySum,by_period_df,half_hour_hit_percantage,hourly_hit_percantage = analize_
 groupByType,profitsBy30Min,losesBy30Min = analize_helper.group_by(summary)
 # Stage 4 - Export all the data to xlsx file
 export_list = [summary,yearlySum,groupByType,profitsBy30Min,losesBy30Min,by_period_df,half_hour_hit_percantage,hourly_hit_percantage]
-
 analize_helper.export_to_excel(export_list)
+
+# stage 5 - Visualization
+
+analize_helper.plotting(export_list)
+
+
 
 
 
