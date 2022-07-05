@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 class Assistant:
     def calc_avg(self,df):
@@ -40,3 +42,11 @@ class Assistant:
             df.loc[time,'interval'] = df.loc[time,'interval'].time()
         df = df.set_index('interval')
         return df 
+
+    def seaborn_time_hit_line_plots(self,times,values,title):
+        sns.set(rc = {'figure.figsize':(15,8)})
+        plot = sns.lineplot(x= times,y=values,color='red',marker='o',mec='k',markersize = 8)
+        plt.title(title)
+        plt.xlabel('Time')
+        plt.ylabel('Hit Percentage')
+        plt.show()

@@ -3,7 +3,7 @@ import numpy as np
 from Processes.firstSummary import summaryAutomation
 from Processes.monthlySummary import monthlySummary
 from Processes.GroupBy import GroupBy
-from helpers.Visualization import Visual
+from Processes.Visualization import Visual
 
 visualObj = Visual()
 monthSumObj = monthlySummary()
@@ -45,7 +45,5 @@ class AnalizeHelpers:
             i += 1
         writer.save()
 
-    def plotting(self,export_list: list):
-        visualObj.half_hourl_plot()
         
 

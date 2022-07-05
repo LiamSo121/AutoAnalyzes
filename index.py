@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from helpers.AnalyzeHelpers import AnalizeHelpers
-from helpers.Visualization import Visual
+from Processes.Visualization import Visual
 
 
 # pd.options.mode.chained_assignment = None  # default='warn'
@@ -27,8 +27,8 @@ analize_helper = AnalizeHelpers()
 # analize_helper.export_to_excel(export_list)
 
 # # stage 5 - Visualization
-
 visual.half_hour_plot()
+visual.hour_plot()
 
 
 
