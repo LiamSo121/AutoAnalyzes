@@ -46,6 +46,6 @@ class AnalizeHelpers:
         writer.save()
 
     def plotting(self,export_list: list):
-        visualObj.half_hourl_plot(export_list)
+        visualObj.half_hourl_plot()
         
 
