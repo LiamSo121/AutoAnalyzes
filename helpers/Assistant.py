@@ -50,3 +50,25 @@ class Assistant:
         plt.xlabel('Time')
         plt.ylabel('Hit Percentage')
         plt.show()
+
+
+    def fix_type_df(self,data: pd.DataFrame):
+        data['30Min Split'] = pd.to_datetime(data['30Min Split'])
+        data['Time'] = [d.time() for d in data['30Min Split']]
+        data.drop(columns='30Min Split',inplace=True)
+        data = data.set_index('Time')
+        return data
+
+    def fix_type_before_plot(self,profitData: pd.DataFrame,lossesData: pd.DataFrame):
+        profits = np.array(profitData['pl'])
+        loses = np.array(lossesData['pl'])
+        times = list(profitData.index)
+        data = pd.DataFrame(data=[profits,loses],columns= times)
+        data.iloc[0,2] = data.iloc[0,2] + data.iloc[0,0]
+        data.iloc[1,2] = data.iloc[1,2] + data.iloc[1,0]
+        data.iloc[0,3] = data.iloc[0,3] + data.iloc[0,1]
+        data.iloc[1,3] = data.iloc[1,3] + data.iloc[1,1]
+        data = data.iloc[: , 2:]
+        data = data.transpose()
+        data.columns = ['Profits','Loses']
+        return data
