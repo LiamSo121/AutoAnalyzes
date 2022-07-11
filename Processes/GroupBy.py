@@ -2,6 +2,8 @@ from tokenize import group
 import pandas as pd
 import numpy as np
 from datetime import date, datetime
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 
 class GroupBy:
@@ -19,7 +21,12 @@ class GroupBy:
 
     def groupByType(self,summary: pd.DataFrame):
         types = summary['type'].unique()
-        summaryGroupedByType = summary.groupby(by=['type','pl'])['pl'].count()
+        summaryGroupedByType = summary.groupby(by=['type','pl'],sort= True)['pl'].count()
+        print(summaryGroupedByType.index)
+        
+        sns.set(rc = {'figure.figsize':(15,8)})
+        sns.barplot(summaryGroupedByType)
+        plt.show()
         return summaryGroupedByType
 
 
