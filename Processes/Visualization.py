@@ -51,6 +51,7 @@ class Visual:
             ax.text(label_x, label_y, int(label_text), ha='center',    
                     va='center')
         plt.title('Number Of Positions By Time')
+        plt.legend(loc='upper center')
         plt.xlabel('Time')
         plt.ylabel('Number Of Positions')
         plt.show()

@@ -27,8 +27,8 @@ fund = 30960
 # analize_helper.export_to_excel(export_list)
 
 # stage 5 - Visualization
-visual.half_hour_plot()
-visual.hour_plot()
+# visual.half_hour_plot()
+# visual.hour_plot()
 
 visual.sum_of_positions_by_time()
 
