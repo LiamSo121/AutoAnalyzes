@@ -1,3 +1,4 @@
+from calendar import month_name
 from turtle import color
 from click import style
 import matplotlib.pyplot as plt
@@ -18,8 +19,7 @@ class Visual:
         values = list(half_hour_data['Hourly Avg'])
         del values[0]
         title = "Hit percentage by half hour"
-        assist.seaborn_time_hit_line_plots(times,values,title)
-
+        assist.seaborn_line_plots(times,values,title)
 
     def hour_plot(self):
         hour_data = pd.read_excel('continuesLiam.xlsx',sheet_name='Hit By 1 Hour')
@@ -30,7 +30,7 @@ class Visual:
         values = list(hour_data['Hourly Avg'])
         del values[0]
         title = "Hit percentage by hour"
-        assist.seaborn_time_hit_line_plots(times,values,title)
+        assist.seaborn_line_plots(times,values,title)
 
     def sum_of_positions_by_time(self):
         profitData = pd.read_excel("continuesLiam.xlsx",sheet_name='Profits By Time')
@@ -54,7 +54,28 @@ class Visual:
         plt.legend(loc='upper center')
         plt.xlabel('Time')
         plt.ylabel('Number Of Positions')
+        plt.savefig(f'Graphs\\Number Of Positions By Time.png',dpi=300)
         plt.show()
+     
+    def hit_percentage_by_month_plot(self):
+        data = pd.read_excel("continuesLiam.xlsx",sheet_name="Summary")
+        month_names = ['January','February','March','April','May','June','July',
+                    'August','September','October','November','December']
+        hit_percentages = list(data['Hit Percentage'])
+        hit_percentages.pop()
+        title = "Hit Percentage By Month"
+        assist.seaborn_line_plots(month_names,hit_percentages,title)
 
-      
+
+    def sum_of_positions_by_type(self):
+        data = pd.read_excel("continuesLiam.xlsx",sheet_name= 'Type Distribution')
+        data.loc[1,'type'] = 'HUMMER'
+        data.loc[3,'type'] = 'OKAR/B'
+        data.loc[5,'type'] = 'OKAR/S'
+        data.loc[7,'type'] = 'SHOOTING-STAR'
+        assist.plot_type(data)
+
         
+
+
+

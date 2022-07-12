@@ -29,10 +29,9 @@ fund = 30960
 # stage 5 - Visualization
 # visual.half_hour_plot()
 # visual.hour_plot()
-
-visual.sum_of_positions_by_time()
-
-
+# visual.sum_of_positions_by_time()
+# visual.hit_percentage_by_month_plot()
+visual.sum_of_positions_by_type()
 
 
 

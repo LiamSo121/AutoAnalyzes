@@ -43,12 +43,13 @@ class Assistant:
         df = df.set_index('interval')
         return df 
 
-    def seaborn_time_hit_line_plots(self,times,values,title):
+    def seaborn_line_plots(self,x_values,y_values,title):
         sns.set(rc = {'figure.figsize':(15,8)})
-        plot = sns.lineplot(x= times,y=values,color='red',marker='o',mec='k',markersize = 8)
+        plot = sns.lineplot(x= x_values,y= y_values,color='red',marker='o',mec='k',markersize = 8)
         plt.title(title)
         plt.xlabel('Time')
         plt.ylabel('Hit Percentage')
+        plt.savefig(f'Graphs\\{title}.png',dpi=300)
         plt.show()
 
 
@@ -72,3 +73,23 @@ class Assistant:
         data = data.transpose()
         data.columns = ['Profits','Loses']
         return data
+
+    def plot_type(self,data: pd.DataFrame):
+        sns.set(style='white',rc = {'figure.figsize':(15,8)})
+        ax = sns.barplot(x= 'type',y='pl.1',hue='pl',data=data,palette='pastel')
+        for bar in ax.patches:
+            height = bar.get_height()
+            width = bar.get_width()
+            x = bar.get_x()
+            y = bar.get_y()
+            label_text = height 
+            label_x = (x + width / 2) 
+            label_y = (y + height / 2) 
+            ax.text(label_x, label_y, int(label_text), ha='center',    
+                    va='center')
+        plt.title('Positions By Type')
+        plt.ylabel('Amount')
+        plt.xlabel('Type')
+        plt.savefig(f'Graphs\\Positions By Type.png',dpi=300)
+        plt.show()
+
