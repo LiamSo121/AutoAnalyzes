@@ -94,6 +94,7 @@ class monthlySummary:
         pl_df['Hit Percentage'] = hit_percentage_list
         pl_df['Number Of Profits'] = number_of_profits_list
         pl_df['Number Of Loses'] = number_of_loses_list
+        pl_df = pl_df.set_index('Month')
 
         return pl_df
 

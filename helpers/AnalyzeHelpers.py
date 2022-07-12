@@ -3,8 +3,9 @@ import numpy as np
 from Processes.firstSummary import summaryAutomation
 from Processes.monthlySummary import monthlySummary
 from Processes.GroupBy import GroupBy
+from Processes.Visualization import Visual
 
-
+visualObj = Visual()
 monthSumObj = monthlySummary()
 summaryObj = summaryAutomation()
 groupObj = GroupBy()
@@ -34,7 +35,7 @@ class AnalizeHelpers:
         profitsBy30Min,losesBy30Min = groupObj.groupByTime(summary)
         return groupByType,profitsBy30Min,losesBy30Min
 
-    def export_to_excel(self,export_list):
+    def export_to_excel(self,export_list: list):
         sheets_names = ['Data','Summary','Type Distribution','Profits By Time','Loses By Time','Splitted Month Summary','Hit By 30 Minutes','Hit By 1 Hour']
         # Output xlsx file name
         writer = pd.ExcelWriter('continuesLiam.xlsx', engine='xlsxwriter')
