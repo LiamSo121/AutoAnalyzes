@@ -43,12 +43,12 @@ class Assistant:
         df = df.set_index('interval')
         return df 
 
-    def seaborn_line_plots(self,x_values,y_values,title):
+    def seaborn_line_plots(self,x_values,y_values,title,xlables,ylables):
         sns.set(rc = {'figure.figsize':(15,8)})
         plot = sns.lineplot(x= x_values,y= y_values,color='red',marker='o',mec='k',markersize = 8)
         plt.title(title)
-        plt.xlabel('Time')
-        plt.ylabel('Hit Percentage')
+        plt.xlabel(xlables)
+        plt.ylabel(ylables)
         plt.savefig(f'Graphs\\{title}.png',dpi=300)
         plt.show()
 
