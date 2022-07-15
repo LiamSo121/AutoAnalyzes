@@ -44,6 +44,12 @@ class AnalizeHelpers:
             file.to_excel(writer,sheet_name= sheets_names[i])
             i += 1
         writer.save()
-
-        
+    def visualize(self):
+        visualObj.half_hour_plot()
+        visualObj.hour_plot()
+        visualObj.sum_of_positions_by_time()
+        visualObj.hit_percentage_by_month_plot()
+        visualObj.sum_of_positions_by_type()
+        visualObj.hit_percentage_by_month_plot()
+                
 

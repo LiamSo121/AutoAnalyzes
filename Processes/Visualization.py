@@ -1,3 +1,4 @@
+from cProfile import label
 from calendar import month_name
 from turtle import color
 from click import style
@@ -19,7 +20,9 @@ class Visual:
         values = list(half_hour_data['Hourly Avg'])
         del values[0]
         title = "Hit percentage by half hour"
-        assist.seaborn_line_plots(times,values,title)
+        xLable = "Time"
+        yLable = "Hit percentage"
+        assist.seaborn_line_plots(times,values,title,xLable,yLable)
 
     def hour_plot(self):
         hour_data = pd.read_excel('continuesLiam.xlsx',sheet_name='Hit By 1 Hour')
@@ -30,7 +33,9 @@ class Visual:
         values = list(hour_data['Hourly Avg'])
         del values[0]
         title = "Hit percentage by hour"
-        assist.seaborn_line_plots(times,values,title)
+        xLable = "Time"
+        yLable = "Hit percentage"
+        assist.seaborn_line_plots(times,values,title,xLable,yLable)
 
     def sum_of_positions_by_time(self):
         profitData = pd.read_excel("continuesLiam.xlsx",sheet_name='Profits By Time')
@@ -64,8 +69,14 @@ class Visual:
         hit_percentages = list(data['Hit Percentage'])
         hit_percentages.pop()
         title = "Hit Percentage By Month"
-        assist.seaborn_line_plots(month_names,hit_percentages,title)
-
+        xLable = "Month"
+        yLable = "Hit Percentage"
+        assist.seaborn_line_plots(month_names,hit_percentages,title,xLable,yLable)
+        yields = list(data['Yield Percantage'])
+        yields.pop()
+        title = "Yield Percentage By Month"
+        yLable = "Yield Percentage"
+        assist.seaborn_line_plots(month_names,yields,title,xLable,yLable)
 
     def sum_of_positions_by_type(self):
         data = pd.read_excel("continuesLiam.xlsx",sheet_name= 'Type Distribution')
@@ -75,7 +86,7 @@ class Visual:
         data.loc[7,'type'] = 'SHOOTING-STAR'
         assist.plot_type(data)
 
-        
+
 
 
 
