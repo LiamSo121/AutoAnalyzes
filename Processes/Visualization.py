@@ -86,30 +86,6 @@ class Visual:
         data.loc[7,'type'] = 'SHOOTING-STAR'
         assist.plot_type(data)
 
-    def hit_percentage_month_time(self):
-        half_hour_data = pd.read_excel('continuesLiam.xlsx',sheet_name='Hit By 30 Minutes')
-        half_hour_data = half_hour_data.rename(columns={'Unnamed: 0':'Month'})
-        half_hour_data.drop(12,axis=0,inplace=True)
-        half_hour_data = half_hour_data.transpose()
-        half_hour_data.columns = half_hour_data.loc['Month']
-        half_hour_data.drop('Month',axis=0,inplace=True)
-        sns.set(style='white',rc = {'figure.figsize':(15,8)})
-        fig, ax = plt.subplots(4,3)
-        ax[0,0] = sns.lineplot(x=list(half_hour_data.index), y= 'January', data=half_hour_data,label= 'January')
-        ax[0,1] = sns.lineplot(x=list(half_hour_data.index), y='February', data=half_hour_data,label = 'February')
-        ax[0,2] = sns.lineplot(x=list(half_hour_data.index), y='March', data=half_hour_data,label = 'March')
-        ax[1,0] = sns.lineplot(x=list(half_hour_data.index), y='April', data=half_hour_data,label = 'April')
-        ax[1,1] = sns.lineplot(x=list(half_hour_data.index), y='May', data=half_hour_data,label = 'May')
-        ax[1,2] = sns.lineplot(x=list(half_hour_data.index), y='June', data=half_hour_data,label = 'June')
-        ax[2,0] = sns.lineplot(x=list(half_hour_data.index), y='July', data=half_hour_data,label = 'July')
-        ax[2,1] = sns.lineplot(x=list(half_hour_data.index), y='August', data=half_hour_data,label = 'August')
-        ax[2,2] = sns.lineplot(x=list(half_hour_data.index), y='September', data=half_hour_data,label = 'September')
-        ax[3,0] = sns.lineplot(x=list(half_hour_data.index), y='October', data=half_hour_data,label = 'October')
-        ax[3,1] = sns.lineplot(x=list(half_hour_data.index), y='November', data=half_hour_data,label = 'November')
-        ax[3,2] = sns.lineplot(x=list(half_hour_data.index), y='December', data=half_hour_data,label = 'December')
-        plt.show()
-        
-            
 
 
 
