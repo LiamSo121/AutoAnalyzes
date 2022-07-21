@@ -16,7 +16,6 @@ class AnalizeHelpers:
         summary = summaryObj.fix_data(summary)
         summary = summaryObj.clean_data(summary)
         summary = summaryObj.calculate_pl(summary,risk,fund)
-        summary = summaryObj.fix_additional_columns(summary)
 
         return summary
 

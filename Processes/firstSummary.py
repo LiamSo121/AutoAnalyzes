@@ -21,6 +21,7 @@ class summaryAutomation:
     
     def calculate_pl(self,summary: pd.DataFrame,risk: float, fund: float) -> pd.DataFrame:
         dates = summary['date'].unique()
+        print(f'There are {len(dates)} trading days')
         for date in dates:
             startOfTheDayFund = fund
             daily_fund_risk = fund * risk
