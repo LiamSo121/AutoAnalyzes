@@ -98,7 +98,7 @@ class monthlySummary:
 
         return pl_df
 
-    def half_hour_distribution(self,summary_by_month: pd.DataFrame, n: int):
+    def half_hour_distribution(self,summary_by_month: pd.DataFrame):
         months_names = ['January','February','March','April','May','June','July',
                     'August','September','October','November','December']
         summary_by_month = assist.remove_problem_dates(summary_by_month)

@@ -25,7 +25,7 @@ class AnalizeHelpers:
         anuual_summary = monthSumObj.calc_annual_sums(anuual_summary)
         # n = number of days to split the month
         n_days_summary = monthSumObj.n_days_distribution(summaryPerMonth,5)
-        hit_perc_by_30_minutes = monthSumObj.half_hour_distribution(summaryPerMonth,5)
+        hit_perc_by_30_minutes = monthSumObj.half_hour_distribution(summaryPerMonth)
         hourly_hit_percentage = monthSumObj.hour_distribution(summaryPerMonth)
         return anuual_summary,n_days_summary,hit_perc_by_30_minutes,hourly_hit_percentage
 
@@ -34,21 +34,21 @@ class AnalizeHelpers:
         profitsBy30Min,losesBy30Min = groupObj.groupByTime(summary)
         return groupByType,profitsBy30Min,losesBy30Min
 
-    def export_to_excel(self,export_list: list):
+    def export_to_excel(self,export_list: list,output_file_name: str):
         sheets_names = ['Data','Summary','Type Distribution','Profits By Time','Loses By Time','Splitted Month Summary','Hit By 30 Minutes','Hit By 1 Hour']
         # Output xlsx file name
-        writer = pd.ExcelWriter('continuesLiam.xlsx', engine='xlsxwriter')
+        writer = pd.ExcelWriter(f'{output_file_name}.xlsx', engine='xlsxwriter')
         i = 0
         for file in export_list:
             file.to_excel(writer,sheet_name= sheets_names[i])
             i += 1
         writer.save()
-    def visualize(self):
-        visualObj.half_hour_plot()
-        visualObj.hour_plot()
-        visualObj.sum_of_positions_by_time()
-        visualObj.hit_percentage_by_month_plot()
-        visualObj.sum_of_positions_by_type()
-        visualObj.hit_percentage_by_month_plot()
+    def visualize(self,output_file_name):
+        visualObj.half_hour_plot(output_file_name)
+        visualObj.hour_plot(output_file_name)
+        visualObj.sum_of_positions_by_time(output_file_name)
+        visualObj.hit_percentage_by_month_plot(output_file_name)
+        visualObj.sum_of_positions_by_type(output_file_name)
+        visualObj.hit_percentage_by_month_plot(output_file_name)
                 
 
