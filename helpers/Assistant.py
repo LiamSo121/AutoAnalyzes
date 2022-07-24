@@ -18,6 +18,12 @@ class Assistant:
         
         return summary_by_month
 
+    def find_problem_dates(self,summary: pd.DataFrame):
+        problemDates = ['2021-03-15','2021-03-16','2021-03-17','2021-03-19','2021-03-22','2021-03-23','2021-03-24','2021-03-25','2021-11-01','2021-11-02','2021-11-03','2021-11-04','2021-11-05']
+        problemDates = pd.to_datetime(problemDates)
+        new_summary = summary[summary['date'] in problemDates]
+        print(new_summary)
+
     def fix_hourly_index(self,df):
         times = []
         startTime = datetime.strptime('16:00:00', '%H:%M:%S')
