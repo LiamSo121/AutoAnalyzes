@@ -49,7 +49,9 @@ class summaryAutomation:
 
 
 
-
+    def calculate_commision(self,summary: pd.DataFrame) -> pd.DataFrame:
+        quantities = np.ndarray(summary['quantity'])
+        print(quantities)
 
 
 
