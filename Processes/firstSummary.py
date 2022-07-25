@@ -40,18 +40,19 @@ class summaryAutomation:
         return summary
 
 
-    def fix_additional_columns(self,summary: pd.DataFrame) -> pd.DataFrame:
-        try:
-            summary.drop(columns=['Unnamed: 25','Unnamed: 26','Unnamed: 27'],inplace=True)
-            return summary
-        except Exception as e:
-            print(e)
+    # def fix_additional_columns(self,summary: pd.DataFrame) -> pd.DataFrame:
+    #     try:
+    #         summary.drop(columns=['Unnamed: 25','Unnamed: 26','Unnamed: 27'],inplace=True)
+    #         return summary
+    #     except Exception as e:
+    #         print(e)
 
 
 
-    def calculate_commision(self,summary: pd.DataFrame) -> pd.DataFrame:
-        quantities = np.ndarray(summary['quantity'])
-        print(quantities)
+    def calculate_commision(self,summary: pd.DataFrame) -> np.array:
+        quantities = np.array(summary['quantity'])   
+        commisions = np.where(quantities < 250,5,((quantities-250) * 0.01) + 5)
+        return commisions
 
 
 

@@ -15,8 +15,8 @@ class AnalizeHelpers:
     def add_daily_change(self,summary: pd.DataFrame,risk:float,fund: float) -> pd.DataFrame:
         summary = summaryObj.fix_data(summary)
         summary = summaryObj.clean_data(summary)
+        summary['commision'] = summaryObj.calculate_commision(summary)
         summary = summaryObj.calculate_pl(summary,risk,fund)
-        summary = summaryObj.calculate_commision(summary)
 
         return summary
 
