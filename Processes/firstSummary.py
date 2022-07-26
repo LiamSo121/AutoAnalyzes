@@ -51,7 +51,7 @@ class summaryAutomation:
 
     def calculate_commision(self,summary: pd.DataFrame) -> np.array:
         quantities = np.array(summary['quantity'])   
-        commisions = np.where(quantities < 250,5,((quantities-250) * 0.01) + 5)
+        commisions = np.where(quantities < 250,4,((quantities-250) * 0.008) + 4)
         return commisions
 
 
