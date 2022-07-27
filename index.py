@@ -4,6 +4,7 @@ import numpy as np
 from helpers.AnalyzeHelpers import AnalizeHelpers
 from Processes.Visualization import Visual
 from datetime import datetime,time
+from datetime import timedelta
 
 
 pd.options.mode.chained_assignment = None  # default='warn'
@@ -40,15 +41,21 @@ output_file_name = 'highLiam'
 def find_problem_dates(summary: pd.DataFrame):
     summary['time'] = pd.to_datetime(summary['time'])
     summary['time'] = [time.time() for time in summary['time']]
+    summary['date'] = pd.to_datetime(summary['date'])
     problem_dates_index_list = summary[summary['time'] < time(16,00)]['date']
     problem_dates_index_list = problem_dates_index_list.unique()
-    temp = []
+    summary['newDateTime'] = np.nan
     for index,row in summary.iterrows():
         if row['date'] in problem_dates_index_list:
-            
-            temp.append(row.index)
+            row['newDateTime'] = datetime.combine(row['date'],row['time'])
+            row['newDateTime'] += timedelta(hours=1)
+            row['time'] = row['newDateTime'].time()
+            print(row['time'])
+    
 
-    print(len(temp))
+
+    
+  
 
 
 find_problem_dates(summary)
