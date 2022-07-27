@@ -60,7 +60,7 @@ class Visual:
         plt.xlabel('Time')
         plt.ylabel('Number Of Positions')
         plt.savefig(f'Graphs\\Number Of Positions By Time.png',dpi=300)
-        plt.show()
+        
      
     def hit_percentage_by_month_plot(self,output_file_name):
         data = pd.read_excel(f'{output_file_name}.xlsx',sheet_name="Summary")

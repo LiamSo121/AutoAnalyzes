@@ -8,15 +8,6 @@ class Assistant:
     def calc_avg(self,df):
         df['Hourly Avg'] = round(df.mean(axis=1),2)
         return df
-        
-    def remove_problem_dates(self, summary_by_month: pd.DataFrame):
-        summary_by_month['date'] = pd.to_datetime(summary_by_month['date'])
-        problemDates = ['2021-03-15','2021-03-16','2021-03-17','2021-03-19','2021-03-22','2021-03-23','2021-03-24','2021-03-25','2021-11-01','2021-11-02','2021-11-03','2021-11-04','2021-11-05']
-        problemDates = pd.to_datetime(problemDates)
-        for date in problemDates:
-            summary_by_month = summary_by_month[summary_by_month['date'] != date]
-        
-        return summary_by_month
 
     def fix_hourly_index(self,df):
         times = []
@@ -50,7 +41,7 @@ class Assistant:
         plt.xlabel(xlables)
         plt.ylabel(ylables)
         plt.savefig(f'Graphs\\{title}.png',dpi=300)
-        plt.show()
+        
 
 
     def fix_type_df(self,data: pd.DataFrame):
@@ -91,5 +82,4 @@ class Assistant:
         plt.ylabel('Amount')
         plt.xlabel('Type')
         plt.savefig(f'Graphs\\Positions By Type.png',dpi=300)
-        plt.show()
-
+        

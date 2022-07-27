@@ -1,8 +1,7 @@
 from matplotlib.pyplot import axis
 import pandas as pd
 import numpy as np
-import datetime as dt
-
+from datetime import datetime,timedelta,time
 
 class summaryAutomation:
     def fix_data(self,summary) -> pd.DataFrame:
@@ -39,20 +38,26 @@ class summaryAutomation:
 
         return summary
 
-
-    # def fix_additional_columns(self,summary: pd.DataFrame) -> pd.DataFrame:
-    #     try:
-    #         summary.drop(columns=['Unnamed: 25','Unnamed: 26','Unnamed: 27'],inplace=True)
-    #         return summary
-    #     except Exception as e:
-    #         print(e)
-
-
-
     def calculate_commision(self,summary: pd.DataFrame) -> np.array:
         quantities = np.array(summary['quantity'])   
         commisions = np.where(quantities < 250,4,((quantities-250) * 0.008) + 4)
         return commisions
 
 
+    def fix_problem_dates(self,summary: pd.DataFrame):
+        summary['time'] = pd.to_datetime(summary['time'])
+        summary['time'] = [time.time() for time in summary['time']]
+        summary['date'] = pd.to_datetime(summary['date'])
+        problem_dates_index_list = summary[summary['time'] < time(16,00)]['date']
+        problem_dates_index_list = problem_dates_index_list.unique()
+        summary['newDateTime'] = np.nan
+        for index,row in summary.iterrows():
+            if row['date'] in problem_dates_index_list:
+                row['newDateTime'] = datetime.combine(row['date'],row['time'])
+                row['newDateTime'] += timedelta(hours=1)
+                summary.loc[index,'time'] = row['newDateTime'].time()
+
+        summary['time'] = summary['time'].astype(str)
+        summary.drop(columns='newDateTime',axis=1,inplace=True)
+        return summary
 

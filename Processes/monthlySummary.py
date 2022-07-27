@@ -26,6 +26,9 @@ class monthlySummary:
             nextMonthData = summary[summary['Month'] == month+1]
             monthlyProfits = 0
             monthlyLoses = 0
+            profits_num = monthlyData[(monthlyData['pl'] == 'P')].shape[0]
+            loses_num = monthlyData[(monthlyData['pl'] == 'L')].shape[0]
+            sum_of_positions = profits_num + loses_num
             for d_change in monthlyData['change']:
                 if(d_change > 0):
                     monthlyProfits += d_change
@@ -36,8 +39,9 @@ class monthlySummary:
             annual_summary.loc[month,'Monthly Sum'] = monthlyProfits - monthlyLoses
             annual_summary.loc[month,'Profit Pos Number'] = monthlyData[(monthlyData['pl'] == 'P')].shape[0]
             annual_summary.loc[month,'Lose Pos Number'] = monthlyData[(monthlyData['pl'] == 'L')].shape[0]
-            annual_summary.loc[month,'Positions Number'] = monthlyData[(monthlyData['pl'] == 'P')].shape[0] + monthlyData[(monthlyData['pl'] == 'L')].shape[0]
-            annual_summary.loc[month,'Hit Percentage'] = round((annual_summary.loc[month,'Profit Pos Number'] / annual_summary.loc[month,'Positions Number']) * 100,2)
+            annual_summary.loc[month,'Positions Number'] = sum_of_positions
+            annual_summary.loc[month,'Hit Percentage'] = round((profits_num / sum_of_positions) * 100,2)
+            annual_summary.loc[month,'Commision'] = monthlyData['commision'].sum()
             startOfMonthFund = monthlyData.loc[monthlyData[monthlyData['present value daily'] !='-'].first_valid_index(),'present value daily']
             if (month != 12):
                 endOfMonthFund = nextMonthData.loc[nextMonthData[nextMonthData['present value daily'] != '-'].first_valid_index(),'present value daily']
@@ -62,6 +66,7 @@ class monthlySummary:
         monthlySum.loc['Annual','Lose Pos Number'] = monthlySum['Lose Pos Number'].drop('Annual',axis=0).sum()
         monthlySum.loc['Annual','Hit Percentage'] = round(monthlySum['Hit Percentage'].mean(),2)
         monthlySum.loc['Annual','Yield Percantage'] = monthlySum['Yield Percantage'].drop('Annual',axis=0).sum()
+        monthlySum.loc['Annual','Commision'] = monthlySum['Commision'].drop('Annual',axis=0).sum()
         return monthlySum
        
     def n_days_distribution(self,summary_by_month:pd.DataFrame,n: int):
@@ -87,8 +92,7 @@ class monthlySummary:
             number_of_loses_list.append(first_period_loses_num)
             number_of_loses_list.append(second_period_loses_num)
             hit_percentage_list.append(round((first_period_profits_num / (first_period_loses_num + first_period_profits_num) * 100),2))
-            hit_percentage_list.append(round((second_period_profits_num / (second_period_loses_num + second_period_profits_num) * 100),2))
-            
+            hit_percentage_list.append(round((second_period_profits_num / (second_period_loses_num + second_period_profits_num) * 100),2))        
         pl_df = pd.DataFrame(columns=['Month','Hit Percentage','Number Of Profits','Number Of Loses'])
         pl_df['Month'] = lables
         pl_df['Hit Percentage'] = hit_percentage_list
@@ -101,7 +105,6 @@ class monthlySummary:
     def half_hour_distribution(self,summary_by_month: pd.DataFrame):
         months_names = ['January','February','March','April','May','June','July',
                     'August','September','October','November','December']
-        summary_by_month = assist.remove_problem_dates(summary_by_month)
         summary_by_month['30Min Split'] = pd.to_datetime('2021-04-01' + " " + summary_by_month['time'])
         month_list = summary_by_month['Month'].unique()
         month_num = 0
@@ -148,7 +151,6 @@ class monthlySummary:
     def hour_distribution(self,summary_by_month):
         months_names = ['January','February','March','April','May','June','July',
                     'August','September','October','November','December']
-        summary_by_month = assist.remove_problem_dates(summary_by_month)
         summary_by_month['1Hour Split'] = pd.to_datetime('2021-04-01' + " " + summary_by_month['time'])
         month_list = summary_by_month['Month'].unique()
         month_num = 0
