@@ -2,6 +2,7 @@ from matplotlib.pyplot import axis
 import pandas as pd
 import numpy as np
 import datetime as dt
+from datetime import datetime,timedelta,time
 
 
 class summaryAutomation:
@@ -47,6 +48,22 @@ class summaryAutomation:
         except Exception as e:
             print(e)
 
+
+    def find_problem_dates(self,summary: pd.DataFrame):
+        summary['time'] = pd.to_datetime(summary['time'])
+        summary['time'] = [time.time() for time in summary['time']]
+        summary['date'] = pd.to_datetime(summary['date'])
+        problem_dates_index_list = summary[summary['time'] < time(16,00)]['date']
+        problem_dates_index_list = problem_dates_index_list.unique()
+        summary['newDateTime'] = np.nan
+        for index,row in summary.iterrows():
+            if row['date'] in problem_dates_index_list:
+                row['newDateTime'] = datetime.combine(row['date'],row['time'])
+                row['newDateTime'] += timedelta(hours=1)
+                summary.loc[index,'time'] = row['newDateTime'].time()
+
+        summary['time'] = summary['time'].astype(str)
+        return summary
 
 
 
