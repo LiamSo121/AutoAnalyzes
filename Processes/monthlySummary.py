@@ -40,6 +40,7 @@ class monthlySummary:
             annual_summary.loc[month,'Hit Percentage'] = round((annual_summary.loc[month,'Profit Pos Number'] / annual_summary.loc[month,'Positions Number']) * 100,2)
             annual_summary.loc[month,'Commision'] = monthlyData['commision'].sum()
             annual_summary.loc[month,'Real_fund'] = monthlyData['Real_pl'].sum()
+            annual_summary.loc[month,'Neto'] = annual_summary.loc[month,'Real_fund'] - annual_summary.loc[month,'Commision']
             startOfMonthFund = monthlyData.loc[monthlyData[monthlyData['present value daily'] !='-'].first_valid_index(),'present value daily']
             if (month != 12):
                 endOfMonthFund = nextMonthData.loc[nextMonthData[nextMonthData['present value daily'] != '-'].first_valid_index(),'present value daily']
@@ -66,6 +67,9 @@ class monthlySummary:
         monthlySum.loc['Annual','Yield Percantage'] = monthlySum['Yield Percantage'].drop('Annual',axis=0).sum()
         monthlySum.loc['Annual','Commision'] = monthlySum['Commision'].drop('Annual',axis=0).sum()
         monthlySum.loc['Annual','Real_fund'] = monthlySum['Real_fund'].drop('Annual',axis=0).sum()
+        monthlySum.loc['Annual','Neto'] = monthlySum['Neto'].drop('Annual',axis=0).sum()
+
+
         return monthlySum
        
     def n_days_distribution(self,summary_by_month:pd.DataFrame,n: int):
