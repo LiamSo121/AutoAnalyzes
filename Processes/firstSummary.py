@@ -2,15 +2,18 @@ from matplotlib.pyplot import axis
 import pandas as pd
 import numpy as np
 from datetime import datetime,timedelta,time
+from helpers.Assistant import Assistant
 
 
+
+assist = Assistant()
 class summaryAutomation:
+    
     def fix_data(self,summary) -> pd.DataFrame:
         summary['stop_at'] =  pd.to_datetime(summary['stop_at'])
         summary.drop(['high','low','risk','stop_loss_type'],axis=1,inplace=True)
         summary['change'] = np.nan
         summary['present value daily'] = np.nan
-        summary['real_pl'] = np.nan
         summary.fillna('-',inplace=True)
         return summary
 
@@ -18,6 +21,7 @@ class summaryAutomation:
     def clean_data(self,summary: pd.DataFrame) -> pd.DataFrame:
         summary = summary[summary['pl'] != 'C'].reset_index(drop=True)
         return summary
+
 
     
     
@@ -27,23 +31,24 @@ class summaryAutomation:
         real_pl_array = []
         for date in dates:
             startOfTheDayFund = fund
-            daily_fund_risk = fund * risk
-            daily_fund_risk = round(daily_fund_risk,2)
+            daily_risk = assist.calculate_risk(fund,risk)
             daily_df = summary[summary['date'] == date]
             for index,row in daily_df.iterrows():
+                position_attributes = [daily_risk,row['action'],row['buy_point'],row['take_profit'],row['stop_loss']]
+                quantity = assist.calculate_quantity(position_attributes)
                 if row['pl'] == 'P' and row['action'] == 'BUY':
-                    real_pl_array.append(round(row['quantity'] * (row['take_profit'] - row['buy_point']),2))
+                    real_pl_array.append(round(quantity * (row['take_profit'] - row['buy_point']),2))
                 elif row['pl'] == 'P' and row['action'] == 'SELL':
-                    real_pl_array.append(round(row['quantity'] * (row['buy_point'] - row['take_profit']),2))
+                    real_pl_array.append(round(quantity * (row['buy_point'] - row['take_profit']),2))
                 elif row['pl'] == 'L' and row['action'] == 'BUY':
-                    real_pl_array.append(round(-1 * (row['quantity'] * (row['buy_point'] - row['stop_loss'])),2))
+                    real_pl_array.append(round(-1 * (quantity * (row['buy_point'] - row['stop_loss'])),2))
                 elif row['pl'] == 'L' and row['action'] == 'SELL':
-                    real_pl_array.append(round(-1 * (row['quantity'] * (row['stop_loss'] - row['buy_point'])),2))
-            summary['change'].mask((summary['date'] == date) & (summary['pl'] == 'P'),daily_fund_risk,inplace= True)
-            summary['change'].mask((summary['date'] == date) & (summary['pl'] == 'L'),daily_fund_risk * (-1),inplace= True)
+                    real_pl_array.append(round(-1 * (quantity * (row['stop_loss'] - row['buy_point'])),2))
+            summary['change'].mask((summary['date'] == date) & (summary['pl'] == 'P'),daily_risk,inplace= True)
+            summary['change'].mask((summary['date'] == date) & (summary['pl'] == 'L'),daily_risk * (-1),inplace= True)
             profits_num = summary[(summary['date'] == date) & (summary['pl'] == 'P')].shape[0]
             loses_num = summary[(summary['date'] == date) & (summary['pl'] == 'L')].shape[0]
-            daily_change = (profits_num - loses_num) * daily_fund_risk
+            daily_change = (profits_num - loses_num) * daily_risk
             fund += daily_change
             rowNumber = summary[summary['date'] == date].index[-1]
             summary.loc[rowNumber,'present value daily'] = round(startOfTheDayFund)
