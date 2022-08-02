@@ -42,7 +42,7 @@ class monthlySummary:
                 starting_fund = fund
                 annual_summary.loc[month,'Real_fund'] = monthlyData['Real_pl'].sum() + starting_fund
             else:
-                annual_summary.loc[month,'Real_fund'] = monthlyData['Real_pl'].sum() + annual_summary.loc[month-1,'Real_fund']
+                annual_summary.loc[month,'Real_fund'] = monthlyData['Real_pl'].sum() + annual_summary.loc[month-1,'Neto']
             annual_summary.loc[month,'Commision'] = monthlyData['commision'].sum()
             annual_summary.loc[month,'Neto'] = annual_summary.loc[month,'Real_fund'] - annual_summary.loc[month,'Commision']
             startOfMonthFund = monthlyData.loc[monthlyData[monthlyData['present value daily'] !='-'].first_valid_index(),'present value daily']
