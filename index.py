@@ -21,7 +21,7 @@ output_file_name = 'check'
 # Stage 1 - Analyze daily positions
 summary = analize_helper.add_daily_change(summary,risk,fund)
 # Stage 2 - Analize Monthly
-yearlySum,by_period_df,half_hour_hit_percantage,hourly_hit_percantage = analize_helper.calc_yearly(summary)
+yearlySum,by_period_df,half_hour_hit_percantage,hourly_hit_percantage = analize_helper.calc_yearly(summary,fund)
 # Stage 3 - Grouping By
 groupByType,profitsBy30Min,losesBy30Min = analize_helper.group_by(summary)
 # Stage 4 - Export all the data to xlsx file

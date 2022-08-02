@@ -18,7 +18,7 @@ class monthlySummary:
         return monthlySum
 
 
-    def calc_monthly(self,summary: pd.DataFrame,annual_summary: pd.DataFrame) -> pd.DataFrame:
+    def calc_monthly(self,summary: pd.DataFrame,annual_summary: pd.DataFrame,fund) -> pd.DataFrame:
         summary['Month'] = pd.DatetimeIndex(summary['date']).month
         months = summary['Month'].unique()
         for month in months:
@@ -26,20 +26,24 @@ class monthlySummary:
             nextMonthData = summary[summary['Month'] == month+1]
             monthlyProfits = 0
             monthlyLoses = 0
-            for d_change in monthlyData['change']:
+            for d_change in monthlyData['Real_pl']:
                 if(d_change > 0):
                     monthlyProfits += d_change
                 else:
-                    monthlyLoses -= d_change
+                    monthlyLoses += d_change
             annual_summary.loc[month,'Profit'] = monthlyProfits
             annual_summary.loc[month,'Lose'] = monthlyLoses
-            annual_summary.loc[month,'Monthly Sum'] = monthlyProfits - monthlyLoses
+            annual_summary.loc[month,'Monthly Sum'] = annual_summary.loc[month,'Profit'] + annual_summary.loc[month,'Lose']
             annual_summary.loc[month,'Profit Pos Number'] = monthlyData[(monthlyData['pl'] == 'P')].shape[0]
             annual_summary.loc[month,'Lose Pos Number'] = monthlyData[(monthlyData['pl'] == 'L')].shape[0]
             annual_summary.loc[month,'Positions Number'] = monthlyData[(monthlyData['pl'] == 'P')].shape[0] + monthlyData[(monthlyData['pl'] == 'L')].shape[0]
             annual_summary.loc[month,'Hit Percentage'] = round((annual_summary.loc[month,'Profit Pos Number'] / annual_summary.loc[month,'Positions Number']) * 100,2)
+            if month == 1:
+                starting_fund = fund
+                annual_summary.loc[month,'Real_fund'] = monthlyData['Real_pl'].sum() + starting_fund
+            else:
+                annual_summary.loc[month,'Real_fund'] = monthlyData['Real_pl'].sum() + annual_summary.loc[month-1,'Real_fund']
             annual_summary.loc[month,'Commision'] = monthlyData['commision'].sum()
-            annual_summary.loc[month,'Real_fund'] = monthlyData['Real_pl'].sum()
             annual_summary.loc[month,'Neto'] = annual_summary.loc[month,'Real_fund'] - annual_summary.loc[month,'Commision']
             startOfMonthFund = monthlyData.loc[monthlyData[monthlyData['present value daily'] !='-'].first_valid_index(),'present value daily']
             if (month != 12):

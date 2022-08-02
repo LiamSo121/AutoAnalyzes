@@ -12,7 +12,6 @@ class summaryAutomation:
     def fix_data(self,summary) -> pd.DataFrame:
         summary['stop_at'] =  pd.to_datetime(summary['stop_at'])
         summary.drop(['high','low','risk','stop_loss_type'],axis=1,inplace=True)
-        summary['change'] = np.nan
         summary['present value daily'] = np.nan
         summary.fillna('-',inplace=True)
         return summary
@@ -46,8 +45,6 @@ class summaryAutomation:
                     real_pl_array.append(round(-1 * (quantity * (row['buy_point'] - row['stop_loss'])),2))
                 elif row['pl'] == 'L' and row['action'] == 'SELL':
                     real_pl_array.append(round(-1 * (quantity * (row['stop_loss'] - row['buy_point'])),2))
-            summary['change'].mask((summary['date'] == date) & (summary['pl'] == 'P'),daily_risk,inplace= True)
-            summary['change'].mask((summary['date'] == date) & (summary['pl'] == 'L'),daily_risk * (-1),inplace= True)
             profits_num = summary[(summary['date'] == date) & (summary['pl'] == 'P')].shape[0]
             loses_num = summary[(summary['date'] == date) & (summary['pl'] == 'L')].shape[0]
             daily_change = (profits_num - loses_num) * daily_risk
