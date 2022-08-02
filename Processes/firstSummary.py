@@ -29,6 +29,7 @@ class summaryAutomation:
         dates = summary['date'].unique()
         print(f'There are {len(dates)} trading days')
         real_pl_array = []
+        real_quantity_array = []
         for date in dates:
             startOfTheDayFund = fund
             daily_risk = assist.calculate_risk(fund,risk)
@@ -36,6 +37,7 @@ class summaryAutomation:
             for index,row in daily_df.iterrows():
                 position_attributes = [daily_risk,row['action'],row['buy_point'],row['take_profit'],row['stop_loss']]
                 quantity = assist.calculate_quantity(position_attributes)
+                real_quantity_array.append(quantity)
                 if row['pl'] == 'P' and row['action'] == 'BUY':
                     real_pl_array.append(round(quantity * (row['take_profit'] - row['buy_point']),2))
                 elif row['pl'] == 'P' and row['action'] == 'SELL':
@@ -53,6 +55,8 @@ class summaryAutomation:
             rowNumber = summary[summary['date'] == date].index[-1]
             summary.loc[rowNumber,'present value daily'] = round(startOfTheDayFund)
         real_pl_array = np.array(real_pl_array)
+        real_quantity_array = np.array(real_quantity_array)
+        summary['quantity'] = real_quantity_array
         summary['Real_pl'] = real_pl_array 
         return summary
 
