@@ -22,10 +22,10 @@ class AnalizeHelpers:
 
         return summary
 
-    def calc_yearly(self,summary: pd.DataFrame,fund) -> pd.DataFrame:
+    def calc_yearly(self,summary: pd.DataFrame,fund:float) -> pd.DataFrame:
         anuual_summary = monthSumObj.create_df()
         anuual_summary,summaryPerMonth = monthSumObj.calc_monthly(summary,anuual_summary,fund)
-        anuual_summary = monthSumObj.calc_annual_sums(anuual_summary)
+        anuual_summary = monthSumObj.calc_annual_sums(anuual_summary,fund)
         # n = number of days to split the month
         n_days_summary = monthSumObj.n_days_distribution(summaryPerMonth,5)
         hit_perc_by_30_minutes = monthSumObj.half_hour_distribution(summaryPerMonth)
