@@ -18,6 +18,7 @@ class AnalizeHelpers:
         summary = summaryObj.fix_problem_dates(summary)
         summary['commision'] = summaryObj.calculate_commision(summary)
         summary = summaryObj.calculate_pl(summary,risk,fund)
+        print("Proccess 1 Fix and add daily change - Done:)")
 
         return summary
 
@@ -29,11 +30,13 @@ class AnalizeHelpers:
         n_days_summary = monthSumObj.n_days_distribution(summaryPerMonth,5)
         hit_perc_by_30_minutes = monthSumObj.half_hour_distribution(summaryPerMonth)
         hourly_hit_percentage = monthSumObj.hour_distribution(summaryPerMonth)
+        print("Proccess 2 Summarized months and year - Done:)")
         return anuual_summary,n_days_summary,hit_perc_by_30_minutes,hourly_hit_percentage
 
     def group_by(self,summary: pd.DataFrame) -> pd.DataFrame:
         groupByType = groupObj.groupByType(summary)
         profitsBy30Min,losesBy30Min = groupObj.groupByTime(summary)
+        print("Proccess 3 Group by - Done:)")
         return groupByType,profitsBy30Min,losesBy30Min
 
     def export_to_excel(self,export_list: list,output_file_name: str):
@@ -45,6 +48,8 @@ class AnalizeHelpers:
             file.to_excel(writer,sheet_name= sheets_names[i])
             i += 1
         writer.save()
+        print("Proccess 4 Export to excel - Done:)")
+
     def visualize(self,output_file_name):
         visualObj.half_hour_plot(output_file_name)
         visualObj.hour_plot(output_file_name)
@@ -52,5 +57,6 @@ class AnalizeHelpers:
         visualObj.hit_percentage_by_month_plot(output_file_name)
         visualObj.sum_of_positions_by_type(output_file_name)
         visualObj.hit_percentage_by_month_plot(output_file_name)
+        print("Proccess 5  Visualization- Done:)")
                 
 
