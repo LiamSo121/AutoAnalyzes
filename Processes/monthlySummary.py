@@ -101,7 +101,6 @@ class monthlySummary:
     def half_hour_distribution(self,summary_by_month: pd.DataFrame):
         months_names = ['January','February','March','April','May','June','July',
                     'August','September','October','November','December']
-        summary_by_month = assist.remove_problem_dates(summary_by_month)
         summary_by_month['30Min Split'] = pd.to_datetime('2021-04-01' + " " + summary_by_month['time'])
         month_list = summary_by_month['Month'].unique()
         month_num = 0
@@ -148,7 +147,6 @@ class monthlySummary:
     def hour_distribution(self,summary_by_month):
         months_names = ['January','February','March','April','May','June','July',
                     'August','September','October','November','December']
-        summary_by_month = assist.remove_problem_dates(summary_by_month)
         summary_by_month['1Hour Split'] = pd.to_datetime('2021-04-01' + " " + summary_by_month['time'])
         month_list = summary_by_month['Month'].unique()
         month_num = 0
