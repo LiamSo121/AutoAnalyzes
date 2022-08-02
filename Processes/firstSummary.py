@@ -10,6 +10,7 @@ class summaryAutomation:
         summary.drop(['high','low','risk','stop_loss_type'],axis=1,inplace=True)
         summary['change'] = np.nan
         summary['present value daily'] = np.nan
+        summary['real_pl'] = np.nan
         summary.fillna('-',inplace=True)
         return summary
 
@@ -19,13 +20,25 @@ class summaryAutomation:
         return summary
 
     
+    
     def calculate_pl(self,summary: pd.DataFrame,risk: float, fund: float) -> pd.DataFrame:
         dates = summary['date'].unique()
         print(f'There are {len(dates)} trading days')
+        real_pl_array = []
         for date in dates:
             startOfTheDayFund = fund
             daily_fund_risk = fund * risk
             daily_fund_risk = round(daily_fund_risk,2)
+            daily_df = summary[summary['date'] == date]
+            for index,row in daily_df.iterrows():
+                if row['pl'] == 'P' and row['action'] == 'BUY':
+                    real_pl_array.append(round(row['quantity'] * (row['take_profit'] - row['buy_point']),2))
+                elif row['pl'] == 'P' and row['action'] == 'SELL':
+                    real_pl_array.append(round(row['quantity'] * (row['buy_point'] - row['take_profit']),2))
+                elif row['pl'] == 'L' and row['action'] == 'BUY':
+                    real_pl_array.append(round(-1 * (row['quantity'] * (row['buy_point'] - row['stop_loss'])),2))
+                elif row['pl'] == 'L' and row['action'] == 'SELL':
+                    real_pl_array.append(round(-1 * (row['quantity'] * (row['stop_loss'] - row['buy_point'])),2))
             summary['change'].mask((summary['date'] == date) & (summary['pl'] == 'P'),daily_fund_risk,inplace= True)
             summary['change'].mask((summary['date'] == date) & (summary['pl'] == 'L'),daily_fund_risk * (-1),inplace= True)
             profits_num = summary[(summary['date'] == date) & (summary['pl'] == 'P')].shape[0]
@@ -34,9 +47,8 @@ class summaryAutomation:
             fund += daily_change
             rowNumber = summary[summary['date'] == date].index[-1]
             summary.loc[rowNumber,'present value daily'] = round(startOfTheDayFund)
-
-
-
+        real_pl_array = np.array(real_pl_array)
+        summary['Real_pl'] = real_pl_array 
         return summary
 
     def calculate_commision(self,summary: pd.DataFrame) -> np.array:
@@ -57,7 +69,6 @@ class summaryAutomation:
                 row['newDateTime'] = datetime.combine(row['date'],row['time'])
                 row['newDateTime'] += timedelta(hours=1)
                 summary.loc[index,'time'] = row['newDateTime'].time()
-
         summary['time'] = summary['time'].astype(str)
         summary.drop(columns='newDateTime',axis=1,inplace=True)
         return summary

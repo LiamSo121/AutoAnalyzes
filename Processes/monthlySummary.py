@@ -38,6 +38,8 @@ class monthlySummary:
             annual_summary.loc[month,'Lose Pos Number'] = monthlyData[(monthlyData['pl'] == 'L')].shape[0]
             annual_summary.loc[month,'Positions Number'] = monthlyData[(monthlyData['pl'] == 'P')].shape[0] + monthlyData[(monthlyData['pl'] == 'L')].shape[0]
             annual_summary.loc[month,'Hit Percentage'] = round((annual_summary.loc[month,'Profit Pos Number'] / annual_summary.loc[month,'Positions Number']) * 100,2)
+            annual_summary.loc[month,'Commision'] = monthlyData['commision'].sum()
+            annual_summary.loc[month,'Real_fund'] = monthlyData['Real_pl'].sum()
             startOfMonthFund = monthlyData.loc[monthlyData[monthlyData['present value daily'] !='-'].first_valid_index(),'present value daily']
             if (month != 12):
                 endOfMonthFund = nextMonthData.loc[nextMonthData[nextMonthData['present value daily'] != '-'].first_valid_index(),'present value daily']
@@ -62,6 +64,8 @@ class monthlySummary:
         monthlySum.loc['Annual','Lose Pos Number'] = monthlySum['Lose Pos Number'].drop('Annual',axis=0).sum()
         monthlySum.loc['Annual','Hit Percentage'] = round(monthlySum['Hit Percentage'].mean(),2)
         monthlySum.loc['Annual','Yield Percantage'] = monthlySum['Yield Percantage'].drop('Annual',axis=0).sum()
+        monthlySum.loc['Annual','Commision'] = monthlySum['Commision'].drop('Annual',axis=0).sum()
+        monthlySum.loc['Annual','Real_fund'] = monthlySum['Real_fund'].drop('Annual',axis=0).sum()
         return monthlySum
        
     def n_days_distribution(self,summary_by_month:pd.DataFrame,n: int):

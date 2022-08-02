@@ -12,9 +12,9 @@ summaryOrigin = pd.read_excel("orders-low-tp.xlsx")
 summary = summaryOrigin.copy()
 
 # Define risk percantage
-risk = 0.005
+risk = 0.004
 # Define Starting Fund
-fund = 30960
+fund = 14300
 # Define output name
 output_file_name = 'check'
 
