@@ -36,6 +36,7 @@ class summaryAutomation:
             for index,row in daily_df.iterrows():
                 position_attributes = [daily_risk,row['action'],row['buy_point'],row['take_profit'],row['stop_loss']]
                 quantity = assist.calculate_quantity(position_attributes)
+                print(daily_risk,quantity)
                 real_quantity_array.append(quantity)
                 if row['pl'] == 'P' and row['action'] == 'BUY':
                     real_pl_array.append(round(quantity * (row['take_profit'] - row['buy_point']),2))
@@ -58,8 +59,8 @@ class summaryAutomation:
         return summary
 
     def calculate_commision(self,summary: pd.DataFrame) -> np.array:
-        quantities = np.array(summary['quantity'])   
-        commisions = np.where(quantities < 250,4,((quantities-250) * 0.008) + 4)
+        quantities = np.array(summary['quantity'])  
+        commisions = np.where(quantities < 250,4,(((quantities-250) * 0.008) * 2) + 4)
         return commisions
 
 

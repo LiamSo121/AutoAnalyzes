@@ -8,7 +8,7 @@ pd.options.mode.chained_assignment = None  # default='warn'
 visual = Visual()
 analize_helper = AnalizeHelpers()
 # Input xlsx file
-summaryOrigin = pd.read_excel("continues.xlsx")
+summaryOrigin = pd.read_excel("orders-low-tp.xlsx")
 summary = summaryOrigin.copy()
 
 # Define risk percantage
