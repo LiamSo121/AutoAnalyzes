@@ -84,3 +84,14 @@ class Assistant:
         plt.xlabel('Type')
         plt.savefig(f'Graphs\\Positions By Type.png',dpi=300)
         plt.show()
+
+
+    def calculate_risk(self,fund,risk):
+        daily_fund_risk = fund * risk
+        return round(daily_fund_risk,2)
+
+    def calculate_quantity(self,position_attributes: list):
+        if position_attributes[1] == 'BUY':
+            return round(position_attributes[0] / (position_attributes[2] - position_attributes[4]))
+        else:
+            return round(position_attributes[0] / (position_attributes[4] - position_attributes[2]))
