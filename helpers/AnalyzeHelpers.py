@@ -17,8 +17,6 @@ class AnalizeHelpers:
         summary = summaryObj.clean_data(summary)
         summary = summaryObj.fix_problem_dates(summary)
         summary = summaryObj.calculate_pl(summary,risk,fund)
-        summary['commision'] = summaryObj.calculate_commision(summary)
-        summary['pl_neto'] = summaryObj.calculate_pl_after_commision(summary)
         print("Proccess 1 Fix and add daily change - Done:)")
 
         return summary
@@ -43,7 +41,7 @@ class AnalizeHelpers:
     def export_to_excel(self,export_list: list,output_file_name: str):
         sheets_names = ['Data','Summary','Type Distribution','Profits By Time','Loses By Time','Splitted Month Summary','Hit By 30 Minutes','Hit By 1 Hour']
         # Output xlsx file name
-        writer = pd.ExcelWriter(f'{output_file_name}.xlsx', engine='xlsxwriter')
+        writer = pd.ExcelWriter(f'Outputs\\{output_file_name}.xlsx', engine='xlsxwriter')
         i = 0
         for file in export_list:
             file.to_excel(writer,sheet_name= sheets_names[i])

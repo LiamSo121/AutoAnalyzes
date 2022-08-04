@@ -95,3 +95,9 @@ class Assistant:
             return round(position_attributes[0] / (position_attributes[2] - position_attributes[4]))
         else:
             return round(position_attributes[0] / (position_attributes[4] - position_attributes[2]))
+
+    def calculate_commision(self,quantity):
+        if quantity > 250:
+            return ((quantity - 250) * 0.01) + 3
+        else:
+            return 3

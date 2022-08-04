@@ -12,8 +12,8 @@ assist = Assistant()
 
 class monthlySummary:
     def create_df(self) -> pd.DataFrame:
-        cols = ['Months','Profit','Lose','Monthly Sum','Positions Number','Profit Pos Number','Lose Pos Number','Hit Percentage','Gross Yield Percantage','Neto Yield Percantage']
-        monthlySum = pd.DataFrame(columns= cols).set_index('Months') 
+        cols = ['Month','Monthly Positions','Profits','Losses','Hit Percentage','Yield Percantage','Gross','Commision','Change','Neto']
+        monthlySum = pd.DataFrame(columns= cols).set_index('Month') 
         monthlySum.fillna('-',inplace=True)
         return monthlySum
 
@@ -23,53 +23,39 @@ class monthlySummary:
         months = summary['Month'].unique()
         for month in months:
             monthlyData = summary[summary['Month'] == month]
-            monthlyProfits = 0
-            monthlyLoses = 0
-            for d_change in monthlyData['Real_pl']:
-                if(d_change > 0):
-                    monthlyProfits += d_change
-                else:
-                    monthlyLoses += d_change
-            annual_summary.loc[month,'Profit'] = monthlyProfits
-            annual_summary.loc[month,'Lose'] = monthlyLoses
-            annual_summary.loc[month,'Monthly Sum'] = annual_summary.loc[month,'Profit'] + annual_summary.loc[month,'Lose']
-            annual_summary.loc[month,'Profit Pos Number'] = monthlyData[(monthlyData['pl'] == 'P')].shape[0]
-            annual_summary.loc[month,'Lose Pos Number'] = monthlyData[(monthlyData['pl'] == 'L')].shape[0]
-            annual_summary.loc[month,'Positions Number'] = monthlyData[(monthlyData['pl'] == 'P')].shape[0] + monthlyData[(monthlyData['pl'] == 'L')].shape[0]
-            annual_summary.loc[month,'Hit Percentage'] = round((annual_summary.loc[month,'Profit Pos Number'] / annual_summary.loc[month,'Positions Number']) * 100,2)
+            annual_summary.loc[month,'Profits'] = len(monthlyData[monthlyData['pl'] == 'P'])
+            annual_summary.loc[month,'Losses'] = len(monthlyData[monthlyData['pl'] == 'L'])
+            annual_summary.loc[month,'Monthly Positions'] = len(monthlyData)
+            annual_summary.loc[month,'Hit Percentage'] = round(annual_summary.loc[month,'Profits'] / annual_summary.loc[month,'Monthly Positions'],4)
             if month == 1:
-                starting_fund = fund 
-                annual_summary.loc[month,'Gross'] = monthlyData['Real_pl'].sum() + starting_fund
+                annual_summary.loc[month,'Gross'] = monthlyData['real_pl'].sum() + fund
             else:
-                annual_summary.loc[month,'Gross'] = monthlyData['Real_pl'].sum() + annual_summary.loc[month-1,'Neto']
+                annual_summary.loc[month,'Gross'] = monthlyData['real_pl'].sum() + annual_summary.loc[month-1,'Neto']
             annual_summary.loc[month,'Commision'] = monthlyData['commision'].sum()
             annual_summary.loc[month,'Neto'] = annual_summary.loc[month,'Gross'] - annual_summary.loc[month,'Commision']
             if month == 1:
-                annual_summary.loc[month,'Gross Yield Percantage'] = round(((annual_summary.loc[month,'Gross'] - starting_fund) / starting_fund) * 100,2)
-                annual_summary.loc[month,'Neto Yield Percantage'] = round(((annual_summary.loc[month,'Neto'] - starting_fund) / starting_fund) * 100,2)
+                annual_summary.loc[month,'Yield Percantage'] = round(((annual_summary.loc[month,'Neto'] - fund) / fund) * 100,2)
+                annual_summary.loc[month,'Change'] = '-'
             else:
-                annual_summary.loc[month,'Gross Yield Percantage'] = round(((annual_summary.loc[month,'Gross'] - annual_summary.loc[month-1,'Gross']) / starting_fund) * 100,2)
-                annual_summary.loc[month,'Neto Yield Percantage'] = round(((annual_summary.loc[month,'Neto'] - annual_summary.loc[month-1,'Neto']) / annual_summary.loc[month-1,'Neto']) * 100,2)
-            if (month == 12):
-                annual_summary.loc['Annual'] = np.nan
+                annual_summary.loc[month,'Yield Percantage'] = round(((annual_summary.loc[month,'Neto'] - annual_summary.loc[month-1,'Neto']) / annual_summary.loc[month-1,'Neto']) * 100,2)
+                annual_summary.loc[month,'Change'] = annual_summary.loc[month,'Neto'] - annual_summary.loc[month-1,'Neto']
         summaryWithMonth = summary.copy()
         summary.drop(columns='Month',inplace=True)
         return annual_summary,summaryWithMonth
 
 
     def calc_annual_sums(self,yearly_sum: pd.DataFrame,fund:float) -> pd.DataFrame:
-        yearly_sum.loc['Annual','Positions Number'] = yearly_sum['Positions Number'].drop('Annual',axis=0).sum()
-        yearly_sum.loc['Annual','Profit'] = yearly_sum['Profit'].drop('Annual',axis=0).sum()
-        yearly_sum.loc['Annual','Lose'] = yearly_sum['Lose'].drop('Annual',axis=0).sum()
-        yearly_sum.loc['Annual','Monthly Sum'] = yearly_sum['Monthly Sum'].drop('Annual',axis=0).sum()
-        yearly_sum.loc['Annual','Profit Pos Number'] = yearly_sum['Profit Pos Number'].drop('Annual',axis=0).sum()
-        yearly_sum.loc['Annual','Lose Pos Number'] = yearly_sum['Lose Pos Number'].drop('Annual',axis=0).sum()
+        yearly_sum.loc['Annual'] = np.nan
+        yearly_sum.loc['Annual','Monthly Positions'] = yearly_sum['Monthly Positions'].drop('Annual',axis=0).sum()
+        yearly_sum.loc['Annual','Profits'] = yearly_sum['Profits'].drop('Annual',axis=0).sum()
+        yearly_sum.loc['Annual','Losses'] = yearly_sum['Losses'].drop('Annual',axis=0).sum()
         yearly_sum.loc['Annual','Hit Percentage'] = round(yearly_sum['Hit Percentage'].mean(),2)
-        yearly_sum.loc['Annual','Gross Yield Percantage'] = round((yearly_sum.loc[12,'Gross'] - fund) / fund,2)
-        yearly_sum.loc['Annual','Neto Yield Percantage'] = round((yearly_sum.loc[12,'Neto'] - fund) / fund,2)
+        yearly_sum.loc['Annual','Yield Percantage'] = round((yearly_sum.loc[12,'Neto'] - fund) * 100 / fund,2)
+        print(yearly_sum.loc[12,'Neto'],fund)
         yearly_sum.loc['Annual','Commision'] = yearly_sum['Commision'].drop('Annual',axis=0).sum()
-        yearly_sum.loc['Annual','Gross'] = yearly_sum['Gross'].drop('Annual',axis=0).sum()
-        yearly_sum.loc['Annual','Neto'] = yearly_sum['Neto'].drop('Annual',axis=0).sum()
+        yearly_sum.loc['Annual','Gross'] = yearly_sum.loc[12,'Gross']
+        yearly_sum.loc['Annual','Neto'] = yearly_sum.loc[12,'Neto']
+        yearly_sum.loc['Annual','Change'] = '-'
 
 
         return yearly_sum
