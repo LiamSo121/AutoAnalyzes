@@ -13,6 +13,7 @@ class summaryAutomation:
         summary['stop_at'] =  pd.to_datetime(summary['stop_at'])
         summary.drop(['high','low','risk','stop_loss_type'],axis=1,inplace=True)
         summary['present value daily'] = np.nan
+        summary['commision'] = np.nan
         summary.fillna('-',inplace=True)
         return summary
 
@@ -26,32 +27,34 @@ class summaryAutomation:
     
     def calculate_pl(self,summary: pd.DataFrame,risk: float, fund: float) -> pd.DataFrame:
         dates = summary['date'].unique()
+        print(f"start {fund}")
         print(f'There are {len(dates)} trading days')
         real_pl_array = []
         real_quantity_array = []
         for date in dates:
-            startOfTheDayFund = fund
+            daily_pl = 0
             daily_risk = assist.calculate_risk(fund,risk)
             daily_df = summary[summary['date'] == date]
             for index,row in daily_df.iterrows():
                 position_attributes = [daily_risk,row['action'],row['buy_point'],row['take_profit'],row['stop_loss']]
                 quantity = assist.calculate_quantity(position_attributes)
-                print(daily_risk,quantity)
                 real_quantity_array.append(quantity)
                 if row['pl'] == 'P' and row['action'] == 'BUY':
                     real_pl_array.append(round(quantity * (row['take_profit'] - row['buy_point']),2))
+                    daily_pl += round(quantity * (row['take_profit'] - row['buy_point']),2)
                 elif row['pl'] == 'P' and row['action'] == 'SELL':
                     real_pl_array.append(round(quantity * (row['buy_point'] - row['take_profit']),2))
+                    daily_pl += round(quantity * (row['buy_point'] - row['take_profit']),2)
                 elif row['pl'] == 'L' and row['action'] == 'BUY':
                     real_pl_array.append(round(-1 * (quantity * (row['buy_point'] - row['stop_loss'])),2))
+                    daily_pl += round(-1 * (quantity * (row['buy_point'] - row['stop_loss'])),2)
                 elif row['pl'] == 'L' and row['action'] == 'SELL':
                     real_pl_array.append(round(-1 * (quantity * (row['stop_loss'] - row['buy_point'])),2))
-            profits_num = summary[(summary['date'] == date) & (summary['pl'] == 'P')].shape[0]
-            loses_num = summary[(summary['date'] == date) & (summary['pl'] == 'L')].shape[0]
-            daily_change = (profits_num - loses_num) * daily_risk
-            fund += daily_change
+                    daily_pl += round(-1 * (quantity * (row['stop_loss'] - row['buy_point'])),2)
+            fund += daily_pl
+            print(date, fund, daily_pl)
             rowNumber = summary[summary['date'] == date].index[-1]
-            summary.loc[rowNumber,'present value daily'] = round(startOfTheDayFund)
+            summary.loc[rowNumber,'present value daily'] = round(fund,2)
         real_pl_array = np.array(real_pl_array)
         real_quantity_array = np.array(real_quantity_array)
         summary['quantity'] = real_quantity_array
@@ -62,9 +65,15 @@ class summaryAutomation:
         quantities = np.array(summary['quantity'])  
         commisions = np.where(quantities < 250,4,(((quantities-250) * 0.008) * 2) + 4)
         return commisions
+    
 
+    def calculate_pl_after_commision(self,summary: pd.DataFrame):
+        pl_array = np.array(summary['Real_pl'])
+        commision_array = np.array(summary['commision'])
+        neto_pl = pl_array - commision_array
+        return neto_pl
 
-    def fix_problem_dates(self,summary: pd.DataFrame):
+    def fix_problem_dates(self,summary: pd.DataFrame) -> pd.DataFrame:
         summary['time'] = pd.to_datetime(summary['time'])
         summary['time'] = [time.time() for time in summary['time']]
         summary['date'] = pd.to_datetime(summary['date'])
