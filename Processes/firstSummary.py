@@ -11,9 +11,10 @@ class summaryAutomation:
     
     def fix_data(self,summary) -> pd.DataFrame:
         summary['stop_at'] =  pd.to_datetime(summary['stop_at'])
-        summary.drop(['high','low','risk','stop_loss_type'],axis=1,inplace=True)
-        summary['present value daily'] = np.nan
+        summary.drop(['high','low','risk','stop_loss_type','gap','cost','leverage_cost','highest','lowest','bp_filled_at'],axis=1,inplace=True)
+        summary['real_pl'] = np.nan
         summary['commision'] = np.nan
+        summary['Neto'] = np.nan
         summary.fillna('-',inplace=True)
         return summary
 
@@ -26,47 +27,32 @@ class summaryAutomation:
     
     
     def calculate_pl(self,summary: pd.DataFrame,risk: float, fund: float) -> pd.DataFrame:
+        i = 0
         dates = summary['date'].unique()
-        print(f"start {fund}")
-        print(f'There are {len(dates)} trading days')
-        real_pl_array = []
-        real_quantity_array = []
         for date in dates:
             daily_pl = 0
             daily_risk = assist.calculate_risk(fund,risk)
             daily_df = summary[summary['date'] == date]
             for index,row in daily_df.iterrows():
                 position_attributes = [daily_risk,row['action'],row['buy_point'],row['take_profit'],row['stop_loss']]
-                quantity = assist.calculate_quantity(position_attributes)
-                real_quantity_array.append(quantity)
+                summary.loc[index,'quantity'] = assist.calculate_quantity(position_attributes)
+                summary.loc[index,'commision'] = assist.calculate_commision(summary.loc[index,'quantity'])
                 if row['pl'] == 'P' and row['action'] == 'BUY':
-                    real_pl_array.append(round(quantity * (row['take_profit'] - row['buy_point']),2))
-                    daily_pl += round(quantity * (row['take_profit'] - row['buy_point']),2)
+                    summary.loc[index,'real_pl'] = round(summary.loc[index,'quantity'] * (summary.loc[index,'take_profit'] - summary.loc[index,'buy_point']),2)
                 elif row['pl'] == 'P' and row['action'] == 'SELL':
-                    real_pl_array.append(round(quantity * (row['buy_point'] - row['take_profit']),2))
-                    daily_pl += round(quantity * (row['buy_point'] - row['take_profit']),2)
+                    summary.loc[index,'real_pl'] = round(summary.loc[index,'quantity']  * (summary.loc[index,'buy_point'] - summary.loc[index,'take_profit']),2)
                 elif row['pl'] == 'L' and row['action'] == 'BUY':
-                    real_pl_array.append(round(-1 * (quantity * (row['buy_point'] - row['stop_loss'])),2))
-                    daily_pl += round(-1 * (quantity * (row['buy_point'] - row['stop_loss'])),2)
+                    summary.loc[index,'real_pl'] =  round(-1 * (summary.loc[index,'quantity'] * (summary.loc[index,'buy_point'] - summary.loc[index,'stop_loss'])),2)
                 elif row['pl'] == 'L' and row['action'] == 'SELL':
-                    real_pl_array.append(round(-1 * (quantity * (row['stop_loss'] - row['buy_point'])),2))
-                    daily_pl += round(-1 * (quantity * (row['stop_loss'] - row['buy_point'])),2)
-            fund += daily_pl
-            print(date, fund, daily_pl)
+                    summary.loc[index,'real_pl'] = round(-1 * (summary.loc[index,'quantity'] * (summary.loc[index,'stop_loss'] - summary.loc[index,'buy_point'])),2)
+                summary.loc[index,'Neto'] = summary.loc[index,'real_pl'] - summary.loc[index,'commision']    
+                i += 1
+                
+            fund += summary[summary['date'] == date]['Neto'].sum()
             rowNumber = summary[summary['date'] == date].index[-1]
             summary.loc[rowNumber,'present value daily'] = round(fund,2)
-        real_pl_array = np.array(real_pl_array)
-        real_quantity_array = np.array(real_quantity_array)
-        summary['quantity'] = real_quantity_array
-        summary['Real_pl'] = real_pl_array 
         return summary
-
-    def calculate_commision(self,summary: pd.DataFrame) -> np.array:
-        quantities = np.array(summary['quantity'])  
-        commisions = np.where(quantities < 250,4,(((quantities-250) * 0.008) * 2) + 4)
-        return commisions
     
-
     def calculate_pl_after_commision(self,summary: pd.DataFrame):
         pl_array = np.array(summary['Real_pl'])
         commision_array = np.array(summary['commision'])

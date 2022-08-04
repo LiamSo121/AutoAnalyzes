@@ -8,7 +8,9 @@ pd.options.mode.chained_assignment = None  # default='warn'
 visual = Visual()
 analize_helper = AnalizeHelpers()
 # Input xlsx file
-summaryOrigin = pd.read_excel("orders-low-tp.xlsx")
+input_file_name = 'orders-low-tp'
+output_file_name = 'check-new1'
+summaryOrigin = pd.read_excel(f"Excel_files\\{input_file_name}.xlsx")
 summary = summaryOrigin.copy()
 
 # Define risk percantage
@@ -16,7 +18,7 @@ risk = 0.004
 # Define Starting Fund
 fund = 14300
 # Define output name
-output_file_name = 'check'
+
 
 # Stage 1 - Analyze daily positions
 summary = analize_helper.add_daily_change(summary,risk,fund)
