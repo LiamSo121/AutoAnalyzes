@@ -98,6 +98,6 @@ class Assistant:
 
     def calculate_commision(self,quantity):
         if quantity > 250:
-            return ((quantity - 250) * 0.01) + 3
+            return ((quantity - 250) * 0.016) + 4
         else:
-            return 3
+            return 4

@@ -21,6 +21,7 @@ class summaryAutomation:
 
     def clean_data(self,summary: pd.DataFrame) -> pd.DataFrame:
         summary = summary[summary['pl'] != 'C'].reset_index(drop=True)
+        summary = summary[summary['buy_point'] > 30].reset_index(drop=True)
         return summary
 
 
