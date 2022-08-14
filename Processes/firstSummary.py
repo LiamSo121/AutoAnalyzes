@@ -1,3 +1,4 @@
+from operator import index
 from matplotlib.pyplot import axis
 import pandas as pd
 import numpy as np
@@ -31,22 +32,21 @@ class summaryAutomation:
         i = 0
         dates = summary['date'].unique()
         for date in dates:
-            daily_pl = 0
             daily_risk = assist.calculate_risk(fund,risk)
             daily_df = summary[summary['date'] == date]
             for index,row in daily_df.iterrows():
                 position_attributes = [daily_risk,row['action'],row['buy_point'],row['take_profit'],row['stop_loss']]
-                summary.loc[index,'quantity'] = assist.calculate_quantity(position_attributes)
-                summary.loc[index,'commision'] = assist.calculate_commision(summary.loc[index,'quantity'])
+                summary.loc[i,'quantity'] = assist.calculate_quantity(position_attributes)
+                summary.loc[i,'commision'] = assist.calculate_commision(summary.loc[i,'quantity'])
                 if row['pl'] == 'P' and row['action'] == 'BUY':
-                    summary.loc[index,'real_pl'] = round(summary.loc[index,'quantity'] * (summary.loc[index,'take_profit'] - summary.loc[index,'buy_point']),2)
+                    summary.loc[i,'real_pl'] = round(summary.loc[i,'quantity'] * (summary.loc[i,'take_profit'] - summary.loc[i,'buy_point']),2)
                 elif row['pl'] == 'P' and row['action'] == 'SELL':
-                    summary.loc[index,'real_pl'] = round(summary.loc[index,'quantity']  * (summary.loc[index,'buy_point'] - summary.loc[index,'take_profit']),2)
+                    summary.loc[i,'real_pl'] = round(summary.loc[i,'quantity']  * (summary.loc[i,'buy_point'] - summary.loc[i,'take_profit']),2)
                 elif row['pl'] == 'L' and row['action'] == 'BUY':
-                    summary.loc[index,'real_pl'] =  round(-1 * (summary.loc[index,'quantity'] * (summary.loc[index,'buy_point'] - summary.loc[index,'stop_loss'])),2)
+                    summary.loc[i,'real_pl'] =  round(-1 * (summary.loc[i,'quantity'] * (summary.loc[i,'buy_point'] - summary.loc[i,'stop_loss'])),2)
                 elif row['pl'] == 'L' and row['action'] == 'SELL':
-                    summary.loc[index,'real_pl'] = round(-1 * (summary.loc[index,'quantity'] * (summary.loc[index,'stop_loss'] - summary.loc[index,'buy_point'])),2)
-                summary.loc[index,'Neto'] = summary.loc[index,'real_pl'] - summary.loc[index,'commision']    
+                    summary.loc[i,'real_pl'] = round(-1 * (summary.loc[i,'quantity'] * (summary.loc[i,'stop_loss'] - summary.loc[i,'buy_point'])),2)
+                summary.loc[i,'Neto'] = summary.loc[i,'real_pl'] - summary.loc[i,'commision']    
                 i += 1
                 
             fund += summary[summary['date'] == date]['Neto'].sum()

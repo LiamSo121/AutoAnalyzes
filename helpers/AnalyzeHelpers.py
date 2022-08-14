@@ -35,11 +35,13 @@ class AnalizeHelpers:
     def group_by(self,summary: pd.DataFrame) -> pd.DataFrame:
         groupByType = groupObj.groupByType(summary)
         profitsBy30Min,losesBy30Min = groupObj.groupByTime(summary)
+        groupBySymbol = groupObj.hit_perc_by_symbol(summary)
+        #groupObj.group_by_gap_percent()
         print("Proccess 3 Group by - Done:)")
-        return groupByType,profitsBy30Min,losesBy30Min
+        return groupByType,profitsBy30Min,losesBy30Min,groupBySymbol
 
     def export_to_excel(self,export_list: list,output_file_name: str):
-        sheets_names = ['Data','Summary','Type Distribution','Profits By Time','Loses By Time','Splitted Month Summary','Hit By 30 Minutes','Hit By 1 Hour']
+        sheets_names = ['Data','Summary','Type Distribution','Profits By Time','Loses By Time','Splitted Month Summary','Hit By 30 Minutes','Hit By 1 Hour','Hit By Symbol']
         # Output xlsx file name
         writer = pd.ExcelWriter(f'Outputs\\{output_file_name}.xlsx', engine='xlsxwriter')
         i = 0
