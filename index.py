@@ -9,7 +9,7 @@ visual = Visual()
 analize_helper = AnalizeHelpers()
 # Input xlsx file
 input_file_name = 'orders-low-tp'
-output_file_name = '0.008risk'
+output_file_name = 'visualtry'
 summaryOrigin = pd.read_excel(f"Excel_files\\{input_file_name}.xlsx")
 summary = summaryOrigin.copy()
 
@@ -30,7 +30,7 @@ groupByType,profitsBy30Min,losesBy30Min,groupBySymbol = analize_helper.group_by(
 export_list = [summary,yearlySum,groupByType,profitsBy30Min,losesBy30Min,by_period_df,half_hour_hit_percantage,hourly_hit_percantage,groupBySymbol]
 analize_helper.export_to_excel(export_list,output_file_name)
 #stage 5 - Visualization
-#analize_helper.visualize(output_file_name)
+analize_helper.visualize(output_file_name)
 
 
 
