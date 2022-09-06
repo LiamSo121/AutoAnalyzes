@@ -35,7 +35,7 @@ class Assistant:
         return df 
 
     def seaborn_line_plots(self,x_values,y_values,title,xlables,ylables):
-        sns.set(rc = {'figure.figsize':(15,8)})
+        sns.set_theme(style='darkgrid',rc = {'figure.figsize':(15,8)})
         sns.lineplot(x= x_values,y= y_values,color='red',marker='o',mec='k',markersize = 8)
         plt.title(title)
         plt.xlabel(xlables)
@@ -53,21 +53,20 @@ class Assistant:
         return data
 
     def fix_type_before_plot(self,profitData: pd.DataFrame,lossesData: pd.DataFrame):
-        profits = np.array(profitData['pl'])
-        loses = np.array(lossesData['pl'])
-        times = list(profitData.index)
+        profits = np.array(profitData['pl'])[:-1]
+        loses = np.array(lossesData['pl'])[:-1]
+        times = list(profitData.index)[:-1]
         data = pd.DataFrame(data=[profits,loses],columns= times)
         data.iloc[0,2] = data.iloc[0,2] + data.iloc[0,0]
         data.iloc[1,2] = data.iloc[1,2] + data.iloc[1,0]
         data.iloc[0,3] = data.iloc[0,3] + data.iloc[0,1]
         data.iloc[1,3] = data.iloc[1,3] + data.iloc[1,1]
-        data = data.iloc[: , 2:]
         data = data.transpose()
         data.columns = ['Profits','Loses']
         return data
 
     def plot_type(self,data: pd.DataFrame):
-        sns.set(style='white',rc = {'figure.figsize':(15,8)})
+        sns.set_theme(style='darkgrid',rc = {'figure.figsize':(15,8)})
         ax = sns.barplot(x= 'type',y='pl.1',hue='pl',data=data,palette='pastel')
         for bar in ax.patches:
             height = bar.get_height()
