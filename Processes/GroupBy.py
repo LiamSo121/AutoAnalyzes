@@ -1,3 +1,4 @@
+from itertools import count
 from tokenize import group
 import pandas as pd
 import numpy as np
@@ -35,11 +36,26 @@ class GroupBy:
         symbols_df = symbols_df.sort_values(by=['Total Positions','Hit Percentage'],ascending=[False,False]).set_index('Symbol')
         return symbols_df
 
-    def group_by_gap_percent(self):
-        data = pd.read_excel(f'Excel_files\\gap check.xlsx')
-        data.drop(columns=['GAP','Unnamed: 24','Unnamed: 25','Unnamed: 26'],inplace=True)
-        print(data.head())
-            
-            
+    def group_by_gap_percent(self,summary:pd.DataFrame):
+        gaps_array = np.arange(1,102,5)
+        profit_df = summary[summary['pl'] == 'P'][['gap','pl']]
+        losses_df = summary[summary['pl'] == 'L'][['gap','pl']]
+        profit_df['new_gap'] = pd.cut(profit_df['gap'],gaps_array)
+        losses_df['new_gap'] = pd.cut(losses_df['gap'],gaps_array)
+        profit_df.dropna(subset=['new_gap'],inplace=True)
+        losses_df.dropna(subset=['new_gap'],inplace=True)
+        profit_pivot = pd.pivot_table(profit_df,values=['pl'],index='new_gap',aggfunc= 'count')
+        losses_pivot = pd.pivot_table(losses_df,values=['pl'],index='new_gap',aggfunc= 'count')
+        profit_pivot.reset_index(inplace=True)
+        losses_pivot.reset_index(inplace=True)
+        total_positions = profit_pivot['pl'] + losses_pivot['pl']
+        hit_percentages = (profit_pivot['pl'] / total_positions) * 100
+        final_table = pd.DataFrame()
+        final_table['gap'] = profit_pivot['new_gap']
+        final_table['hit_perc'] = hit_percentages
+
+        return final_table 
+
+
 
 

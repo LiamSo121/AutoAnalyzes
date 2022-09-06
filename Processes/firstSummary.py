@@ -12,7 +12,7 @@ class summaryAutomation:
     
     def fix_data(self,summary) -> pd.DataFrame:
         summary['stop_at'] =  pd.to_datetime(summary['stop_at'])
-        summary.drop(['high','low','risk','stop_loss_type','gap','cost','leverage_cost','highest','lowest','bp_filled_at'],axis=1,inplace=True)
+        summary.drop(['high','low','risk','stop_loss_type','cost','leverage_cost','highest','lowest','bp_filled_at'],axis=1,inplace=True)
         summary['real_pl'] = np.nan
         summary['commision'] = np.nan
         summary['Neto'] = np.nan
