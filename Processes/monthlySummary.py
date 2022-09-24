@@ -133,8 +133,11 @@ class monthlySummary:
                 for i in range(diff):
                     hit_perc = 0
                     month_hit_perc.append(hit_perc)
-            df[months_names[month_num]] = month_hit_perc
-            month_num += 1
+            try:
+                df[months_names[month_num]] = month_hit_perc
+                month_num += 1
+            except Exception as e:
+                print(e)
         df = assist.fix_half_hour_index(df)
         df = assist.calc_avg(df)
         df = df.transpose()
@@ -179,8 +182,11 @@ class monthlySummary:
                 for i in range(diff):
                     hit_perc = 0
                     month_hit_perc.append(hit_perc)
-            df[months_names[month_num]] = month_hit_perc
-            month_num += 1
+            try:
+                df[months_names[month_num]] = month_hit_perc
+                month_num += 1
+            except Exception as e:
+                print(e)
         df = assist.fix_hourly_index(df)
         df = assist.calc_avg(df)
         df = df.transpose()

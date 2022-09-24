@@ -12,7 +12,6 @@ class summaryAutomation:
     
     def fix_data(self,summary) -> pd.DataFrame:
         summary['stop_at'] =  pd.to_datetime(summary['stop_at'])
-        summary.drop(['high','low','risk','stop_loss_type','cost','leverage_cost','highest','lowest','bp_filled_at'],axis=1,inplace=True)
         summary['real_pl'] = np.nan
         summary['commision'] = np.nan
         summary['Neto'] = np.nan
@@ -21,8 +20,8 @@ class summaryAutomation:
 
 
     def clean_data(self,summary: pd.DataFrame) -> pd.DataFrame:
+        summary.drop(['bp_filled_price','bp_filled_at','stop_at','created_at','pl_amount','highest','lowest','pl_filled_price'],axis=1,inplace=True)
         summary = summary[summary['pl'] != 'C'].reset_index(drop=True)
-        summary = summary[summary['buy_point'] > 30].reset_index(drop=True)
         return summary
 
 

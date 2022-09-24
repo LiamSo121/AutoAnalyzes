@@ -37,7 +37,8 @@ class GroupBy:
         return symbols_df
 
     def group_by_gap_percent(self,summary:pd.DataFrame):
-        gaps_array = np.arange(1,102,5)
+        max_value,min_value = max(summary['gap']),min(summary['gap'])
+        gaps_array = np.arange(min_value,max_value,5)
         profit_df = summary[summary['pl'] == 'P'][['gap','pl']]
         losses_df = summary[summary['pl'] == 'L'][['gap','pl']]
         profit_df['new_gap'] = pd.cut(profit_df['gap'],gaps_array)
@@ -53,6 +54,7 @@ class GroupBy:
         final_table = pd.DataFrame()
         final_table['gap'] = profit_pivot['new_gap']
         final_table['hit_perc'] = hit_percentages
+        final_table.dropna(inplace=True)
 
         return final_table 
 

@@ -8,9 +8,9 @@ pd.options.mode.chained_assignment = None  # default='warn'
 visual = Visual()
 analize_helper = AnalizeHelpers()
 # Input xlsx file
-input_file_name = 'orders-low-tp'
-output_file_name = 'visualtry'
-summaryOrigin = pd.read_excel(f"Excel_files\\{input_file_name}.xlsx")
+input_file_name = 'historicalorder-2021'
+output_file_name = 'newReportTry'
+summaryOrigin = pd.read_csv(f"Excel_files\\{input_file_name}.csv")
 summary = summaryOrigin.copy()
 
 # Define risk percantage
