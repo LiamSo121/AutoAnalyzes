@@ -11,9 +11,9 @@ assist = Assistant()
 class summaryAutomation:
     
     def fix_data(self,summary) -> pd.DataFrame:
-        summary['stop_at'] =  pd.to_datetime(summary['stop_at'])
         summary['real_pl'] = np.nan
         summary['commision'] = np.nan
+        summary['new_quantity'] = np.nan
         summary['Neto'] = np.nan
         summary.fillna('-',inplace=True)
         return summary
@@ -29,25 +29,25 @@ class summaryAutomation:
     
     def calculate_pl(self,summary: pd.DataFrame,risk: float, fund: float) -> pd.DataFrame:
         i = 0
+        summary['date'] = pd.to_datetime(summary['date'])
         dates = summary['date'].unique()
         daily_risk = assist.calculate_risk(fund,risk)
         for date in dates:
             daily_df = summary[summary['date'] == date]
             for index,row in daily_df.iterrows():
                 position_attributes = [daily_risk,row['action'],row['buy_point'],row['take_profit'],row['stop_loss']]
-                summary.loc[i,'quantity'] = assist.calculate_quantity(position_attributes)
-                summary.loc[i,'commision'] = assist.calculate_commision(summary.loc[i,'quantity'])
+                summary.loc[i,'new_quantity'] = assist.calculate_quantity(position_attributes)
+                summary.loc[i,'commision'] = assist.calculate_commision(summary.loc[i,'new_quantity'])
                 if row['pl'] == 'P' and row['action'] == 'BUY':
-                    summary.loc[i,'real_pl'] = round(summary.loc[i,'quantity'] * (summary.loc[i,'take_profit'] - summary.loc[i,'buy_point']),2)
+                    summary.loc[i,'real_pl'] = round(summary.loc[i,'new_quantity'] * (summary.loc[i,'take_profit'] - summary.loc[i,'buy_point']),2)
                 elif row['pl'] == 'P' and row['action'] == 'SELL':
-                    summary.loc[i,'real_pl'] = round(summary.loc[i,'quantity']  * (summary.loc[i,'buy_point'] - summary.loc[i,'take_profit']),2)
+                    summary.loc[i,'real_pl'] = round(summary.loc[i,'new_quantity']  * (summary.loc[i,'buy_point'] - summary.loc[i,'take_profit']),2)
                 elif row['pl'] == 'L' and row['action'] == 'BUY':
-                    summary.loc[i,'real_pl'] =  round(-1 * (summary.loc[i,'quantity'] * (summary.loc[i,'buy_point'] - summary.loc[i,'stop_loss'])),2)
+                    summary.loc[i,'real_pl'] =  round(-1 * (summary.loc[i,'new_quantity'] * (summary.loc[i,'buy_point'] - summary.loc[i,'stop_loss'])),2)
                 elif row['pl'] == 'L' and row['action'] == 'SELL':
-                    summary.loc[i,'real_pl'] = round(-1 * (summary.loc[i,'quantity'] * (summary.loc[i,'stop_loss'] - summary.loc[i,'buy_point'])),2)
+                    summary.loc[i,'real_pl'] = round(-1 * (summary.loc[i,'new_quantity'] * (summary.loc[i,'stop_loss'] - summary.loc[i,'buy_point'])),2)
                 summary.loc[i,'Neto'] = summary.loc[i,'real_pl'] - summary.loc[i,'commision']
                 i += 1
-            print(date, daily_risk)
             fund += summary[summary['date'] == date]['Neto'].sum()
             rowNumber = summary[summary['date'] == date].index[-1]
             summary.loc[rowNumber,'present value daily'] = round(fund,2)
@@ -60,18 +60,4 @@ class summaryAutomation:
         neto_pl = pl_array - commision_array
         return neto_pl
 
-    def fix_problem_dates(self,summary: pd.DataFrame) -> pd.DataFrame:
-        summary['time'] = pd.to_datetime(summary['time'])
-        summary['time'] = [time.time() for time in summary['time']]
-        summary['date'] = pd.to_datetime(summary['date'])
-        problem_dates_index_list = summary[summary['time'] < time(16,00)]['date']
-        problem_dates_index_list = problem_dates_index_list.unique()
-        summary['newDateTime'] = np.nan
-        for index,row in summary.iterrows():
-            if row['date'] in problem_dates_index_list:
-                row['newDateTime'] = datetime.combine(row['date'],row['time'])
-                row['newDateTime'] += timedelta(hours=1)
-                summary.loc[index,'time'] = row['newDateTime'].time()
-        summary['time'] = summary['time'].astype(str)
-        summary.drop(columns='newDateTime',axis=1,inplace=True)
-        return summary
+  

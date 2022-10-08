@@ -20,6 +20,7 @@ class monthlySummary:
 
     def calc_monthly(self,summary: pd.DataFrame,annual_summary: pd.DataFrame,fund) -> pd.DataFrame:
         summary['Month'] = pd.DatetimeIndex(summary['date']).month
+        print(list(summary['Month']))
         months = summary['Month'].unique()
         for month in months:
             monthlyData = summary[summary['Month'] == month]
