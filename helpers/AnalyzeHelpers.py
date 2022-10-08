@@ -15,7 +15,7 @@ class AnalizeHelpers:
     def add_daily_change(self,summary: pd.DataFrame,risk:float,fund: float) -> pd.DataFrame:
         summary = summaryObj.fix_data(summary)
         summary = summaryObj.clean_data(summary)
-        summary = summaryObj.fix_problem_dates(summary)
+        #summary = summaryObj.fix_problem_dates(summary)
         summary = summaryObj.calculate_pl(summary,risk,fund)
         print("Proccess 1 Fix and add daily change - Done:)")
 

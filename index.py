@@ -8,7 +8,7 @@ pd.options.mode.chained_assignment = None  # default='warn'
 visual = Visual()
 analize_helper = AnalizeHelpers()
 # Input xlsx file
-input_file_name = 'historicalorder-2021'
+input_file_name = 'historicalorder-2021-sl0.01'
 output_file_name = input_file_name + '-Analyzed'
 summaryOrigin = pd.read_csv(f"Excel_files\\{input_file_name}.csv")
 summary = summaryOrigin.copy()

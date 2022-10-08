@@ -30,8 +30,8 @@ class summaryAutomation:
     def calculate_pl(self,summary: pd.DataFrame,risk: float, fund: float) -> pd.DataFrame:
         i = 0
         dates = summary['date'].unique()
+        daily_risk = assist.calculate_risk(fund,risk)
         for date in dates:
-            daily_risk = assist.calculate_risk(fund,risk)
             daily_df = summary[summary['date'] == date]
             for index,row in daily_df.iterrows():
                 position_attributes = [daily_risk,row['action'],row['buy_point'],row['take_profit'],row['stop_loss']]
@@ -45,12 +45,13 @@ class summaryAutomation:
                     summary.loc[i,'real_pl'] =  round(-1 * (summary.loc[i,'quantity'] * (summary.loc[i,'buy_point'] - summary.loc[i,'stop_loss'])),2)
                 elif row['pl'] == 'L' and row['action'] == 'SELL':
                     summary.loc[i,'real_pl'] = round(-1 * (summary.loc[i,'quantity'] * (summary.loc[i,'stop_loss'] - summary.loc[i,'buy_point'])),2)
-                summary.loc[i,'Neto'] = summary.loc[i,'real_pl'] - summary.loc[i,'commision']    
+                summary.loc[i,'Neto'] = summary.loc[i,'real_pl'] - summary.loc[i,'commision']
                 i += 1
-                
+            print(date, daily_risk)
             fund += summary[summary['date'] == date]['Neto'].sum()
             rowNumber = summary[summary['date'] == date].index[-1]
             summary.loc[rowNumber,'present value daily'] = round(fund,2)
+            daily_risk = assist.calculate_risk(summary.loc[rowNumber,'present value daily'],risk)
         return summary
     
     def calculate_pl_after_commision(self,summary: pd.DataFrame):
