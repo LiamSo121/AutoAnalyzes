@@ -19,9 +19,16 @@ class monthlySummary:
 
 
     def calc_monthly(self,summary: pd.DataFrame,annual_summary: pd.DataFrame,fund) -> pd.DataFrame:
-        summary['Month'] = pd.DatetimeIndex(summary['date']).month
-        print(list(summary['Month']))
+        months = []
+        try:
+            for date in summary['date']:
+                months.append(datetime.strptime(date,"%Y-%m-%d").month)
+        except Exception as e:
+            for date in summary['date']:
+                months.append(datetime.strptime(date,"%d/%m/%Y").month)
+        summary['Month'] = months
         months = summary['Month'].unique()
+        print(months)
         for month in months:
             monthlyData = summary[summary['Month'] == month]
             annual_summary.loc[month,'Profits'] = len(monthlyData[monthlyData['pl'] == 'P'])
@@ -50,7 +57,7 @@ class monthlySummary:
         yearly_sum.loc['Annual','Monthly Positions'] = yearly_sum['Monthly Positions'].drop('Annual',axis=0).sum()
         yearly_sum.loc['Annual','Profits'] = yearly_sum['Profits'].drop('Annual',axis=0).sum()
         yearly_sum.loc['Annual','Losses'] = yearly_sum['Losses'].drop('Annual',axis=0).sum()
-        yearly_sum.loc['Annual','Hit Percentage'] = round(yearly_sum['Hit Percentage'].mean(),2)
+        yearly_sum.loc['Annual','Hit Percentage'] = round(yearly_sum['Hit Percentage'].mean(),5)
         yearly_sum.loc['Annual','Yield Percantage'] = round((yearly_sum.loc[12,'Neto'] - fund) * 100 / fund,2)
         print(yearly_sum.loc[12,'Neto'],fund)
         yearly_sum.loc['Annual','Commision'] = yearly_sum['Commision'].drop('Annual',axis=0).sum()

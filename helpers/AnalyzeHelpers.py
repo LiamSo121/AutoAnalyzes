@@ -15,7 +15,6 @@ class AnalizeHelpers:
     def add_daily_change(self,summary: pd.DataFrame,risk:float,fund: float) -> pd.DataFrame:
         summary = summaryObj.fix_data(summary)
         summary = summaryObj.clean_data(summary)
-        #summary = summaryObj.fix_problem_dates(summary)
         summary = summaryObj.calculate_pl(summary,risk,fund)
         print("Proccess 1 Fix and add daily change - Done:)")
 
@@ -25,12 +24,10 @@ class AnalizeHelpers:
         anuual_summary = monthSumObj.create_df()
         anuual_summary,summaryPerMonth = monthSumObj.calc_monthly(summary,anuual_summary,fund)
         anuual_summary = monthSumObj.calc_annual_sums(anuual_summary,fund)
-        # n = number of days to split the month
-        n_days_summary = monthSumObj.n_days_distribution(summaryPerMonth,5)
         hit_perc_by_30_minutes = monthSumObj.half_hour_distribution(summaryPerMonth)
         hourly_hit_percentage = monthSumObj.hour_distribution(summaryPerMonth)
         print("Proccess 2 Summarized months and year - Done:)")
-        return anuual_summary,n_days_summary,hit_perc_by_30_minutes,hourly_hit_percentage
+        return anuual_summary,hit_perc_by_30_minutes,hourly_hit_percentage
 
     def group_by(self,summary: pd.DataFrame) -> pd.DataFrame:
         groupByType = groupObj.groupByType(summary)
@@ -41,7 +38,7 @@ class AnalizeHelpers:
         return groupByType,profitsBy30Min,losesBy30Min,groupBySymbol,group_by_gap
 
     def export_to_excel(self,export_list: list,output_file_name: str):
-        sheets_names = ['Data','Summary','Type Distribution','Profits By Time','Loses By Time','Splitted Month Summary','Hit By 30 Minutes','Hit By 1 Hour','Hit By Symbol','Gap']
+        sheets_names = ['Data','Summary','Type Distribution','Profits By Time','Loses By Time','Hit By 30 Minutes','Hit By 1 Hour','Hit By Symbol','Gap']
         # Output xlsx file name
         writer = pd.ExcelWriter(f'Outputs\\{output_file_name}.xlsx', engine='xlsxwriter')
         i = 0

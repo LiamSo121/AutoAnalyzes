@@ -29,13 +29,13 @@ class summaryAutomation:
     
     def calculate_pl(self,summary: pd.DataFrame,risk: float, fund: float) -> pd.DataFrame:
         i = 0
-        summary['date'] = pd.to_datetime(summary['date'])
         dates = summary['date'].unique()
         daily_risk = assist.calculate_risk(fund,risk)
         for date in dates:
             daily_df = summary[summary['date'] == date]
             for index,row in daily_df.iterrows():
                 position_attributes = [daily_risk,row['action'],row['buy_point'],row['take_profit'],row['stop_loss']]
+                summary.loc[i,'risk'] = daily_risk
                 summary.loc[i,'new_quantity'] = assist.calculate_quantity(position_attributes)
                 summary.loc[i,'commision'] = assist.calculate_commision(summary.loc[i,'new_quantity'])
                 if row['pl'] == 'P' and row['action'] == 'BUY':
