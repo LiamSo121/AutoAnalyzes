@@ -28,7 +28,6 @@ class monthlySummary:
                 months.append(datetime.strptime(date,"%d/%m/%Y").month)
         summary['Month'] = months
         months = summary['Month'].unique()
-        print(months)
         for month in months:
             monthlyData = summary[summary['Month'] == month]
             annual_summary.loc[month,'Profits'] = len(monthlyData[monthlyData['pl'] == 'P'])

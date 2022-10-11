@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 from helpers.Assistant import Assistant
-
+from os import walk
 assist = Assistant()
 
 class Visual:
@@ -83,7 +83,6 @@ class Visual:
         data.loc[5,'type'] = 'OKAR/S'
         data.loc[7,'type'] = 'SHOOTING-STAR'
         assist.plot_type(data)
-
 
 
 
