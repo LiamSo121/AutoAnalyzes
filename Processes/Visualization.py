@@ -1,6 +1,6 @@
 from cProfile import label
 from calendar import month_name
-from turtle import color
+from turtle import color, title
 from click import style
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -75,6 +75,9 @@ class Visual:
         title = "Yield Percentage By Month"
         yLable = "Yield Percentage"
         assist.seaborn_line_plots(month_names,yields,title,xLable,yLable)
+      
+
+
 
     def sum_of_positions_by_type(self,output_file_name):
         data = pd.read_excel(f'Outputs\\{output_file_name}.xlsx',sheet_name= 'Type Distribution')
@@ -85,5 +88,29 @@ class Visual:
         assist.plot_type(data)
 
 
+    def plot_yearly_hit(self,dict):
+        sns.set_theme(style='darkgrid',rc = {'figure.figsize':(15,8)})
+        title = "Hit Percentage per year"
+        xLable = "Year"
+        yLable = "Hit percentage"
+        plt.title(title)
+        plt.xlabel(xLable)
+        plt.ylabel(yLable)
+
+        x_values = [year for year in dict.keys()]
+        for i in range(6):
+            yearly_hits = []
+            for year in x_values:
+                yearly_hits.append(dict[year][f'0.0{i}'])
+            plt.plot(x_values,yearly_hits,label= f"0.0{i}")
+        plt.legend()
+        plt.show()
 
 
+
+
+
+
+
+
+        

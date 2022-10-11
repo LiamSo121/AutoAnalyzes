@@ -52,9 +52,10 @@ class AnalizeHelpers:
         # visualObj.half_hour_plot(output_file_name)
         # visualObj.hour_plot(output_file_name)
         # visualObj.sum_of_positions_by_time(output_file_name)
-        visualObj.hit_percentage_by_month_plot(output_file_name)
+        # visualObj.hit_percentage_by_month_plot(output_file_name)
         # visualObj.sum_of_positions_by_type(output_file_name)
         # visualObj.hit_percentage_by_month_plot(output_file_name)
+        visualObj.plot_yearly_hit(output_file_name)
         print("Proccess 5  Visualization- Done:)")
                 
 
