@@ -1,38 +1,37 @@
 import pandas as pd
-import numpy as np
 from helpers.AnalyzeHelpers import AnalizeHelpers
 from Processes.Visualization import Visual
+from os import walk
+import csv
 
 
 pd.options.mode.chained_assignment = None  # default='warn'
 visual = Visual()
 analize_helper = AnalizeHelpers()
-# Input xlsx file
-input_file_name = 'historicalorder-2020sl-0.01'
-output_file_name = input_file_name + '-Analyzed'
-summaryOrigin = pd.read_csv(f"Excel_files\\{input_file_name}.csv")
-summary = summaryOrigin.copy()
-
+path = './Excel_files'
+file_names = next(walk(path),(None,None,[]))[2]
 # Define risk percantage
 risk = 0.004
 # Define Starting Fund
 fund = 14300
-# Define output name
+for filename in file_names:
+    output_file_name = filename + '-Analyzed'
+    summaryOrigin = pd.read_csv(f"Excel_files\\{filename}")
+    summary = summaryOrigin.copy()
+    # Stage 1 - Analyze daily positions
+    summary = analize_helper.add_daily_change(summary,risk,fund)
+    # Stage 2 - Analize Monthly
+    yearlySum,half_hour_hit_percantage,hourly_hit_percantage = analize_helper.calc_yearly(summary,fund)
+    # Stage 3 - Grouping By
+    groupByType,profitsBy30Min,losesBy30Min,groupBySymbol,groupByGap = analize_helper.group_by(summary)
+    # Stage 4 - Export all the data to xlsx file
+    export_list = [summary,yearlySum,groupByType,profitsBy30Min,losesBy30Min,half_hour_hit_percantage,hourly_hit_percantage,groupBySymbol,groupByGap]
+    analize_helper.export_to_excel(export_list,output_file_name)
+    #stage 5 - Visualization
+    #analize_helper.visualize(output_file_name)
+    print(f'{filename} Is done :)')
 
 
-# Stage 1 - Analyze daily positions
-summary = analize_helper.add_daily_change(summary,risk,fund)
-# Stage 2 - Analize Monthly
-yearlySum,half_hour_hit_percantage,hourly_hit_percantage = analize_helper.calc_yearly(summary,fund)
-# Stage 3 - Grouping By
-groupByType,profitsBy30Min,losesBy30Min,groupBySymbol,groupByGap = analize_helper.group_by(summary)
-# Stage 4 - Export all the data to xlsx file
-export_list = [summary,yearlySum,groupByType,profitsBy30Min,losesBy30Min,half_hour_hit_percantage,hourly_hit_percantage,groupBySymbol,groupByGap]
-analize_helper.export_to_excel(export_list,output_file_name)
-#stage 5 - Visualization
-#analize_helper.visualize(output_file_name)
-
-
-
+print("All files have been analyzed")
 
 
