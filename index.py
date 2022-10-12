@@ -31,7 +31,7 @@ fund = 14300
     # analize_helper.export_to_excel(export_list,output_file_name)
     #stage 5 - Visualization
 
-years_list = [ '2018', '2019', '2020','2021']
+years_list = ['2015','2016','2017', '2018', '2019', '2020','2021']
 dict = {}
 for year in years_list:
     dict[year] = {}
@@ -42,8 +42,10 @@ for year in years_list:
                 filename = filename[:-5] + '.xlsx'
                 data = pd.read_excel(f"Outputs\\{filename}",sheet_name= 'Summary')
                 #y_values.append(data.loc[12,'Hit Percentage'])
+                print(year)
                 dict[year][f'0.0{i}'] = data.loc[12,'Hit Percentage']
             else:
+                print(year)
                 filename = filename[:-5] + '.xlsx'
                 data = pd.read_excel(f"Outputs\\{filename}",sheet_name= 'Summary')
                 #y_values.append(data.loc[12,'Hit Percentage'])
