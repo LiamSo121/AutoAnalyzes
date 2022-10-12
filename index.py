@@ -28,7 +28,7 @@ for filename in file_names:
     export_list = [summary,yearlySum,groupByType,profitsBy30Min,losesBy30Min,half_hour_hit_percantage,hourly_hit_percantage,groupBySymbol,groupByGap]
     analize_helper.export_to_excel(export_list,output_file_name)
     #stage 5 - Visualization
-    analize_helper.visualize(output_file_name)
+    #analize_helper.visualize(output_file_name)
     print(f'{filename} Is done :)')
 
 
