@@ -17,6 +17,7 @@ fund = 14300
 for filename in file_names:
     output_file_name = filename + '-Analyzed'
     summaryOrigin = pd.read_csv(f"Excel_files\\{filename}")
+    
     summary = summaryOrigin.copy()
     # Stage 1 - Analyze daily positions
     summary = analize_helper.add_daily_change(summary,risk,fund)

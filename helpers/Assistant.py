@@ -100,3 +100,8 @@ class Assistant:
             return ((quantity - 250) * 0.016) + 4
         else:
             return 4
+    def caculate_yearly_hit_percentages(self,summary):
+        profits = summary[summary['pl'] == 'P']
+        loses = summary[summary['pl'] == 'L']
+        hit_perc = len(profits) / (len(profits) + len(loses)) * 100
+        return hit_perc

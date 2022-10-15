@@ -51,12 +51,13 @@ class monthlySummary:
         return annual_summary,summaryWithMonth
 
 
-    def calc_annual_sums(self,yearly_sum: pd.DataFrame,fund:float) -> pd.DataFrame:
+    def calc_annual_sums(self,yearly_sum: pd.DataFrame,summary:pd.DataFrame,fund:float) -> pd.DataFrame:
         yearly_sum.loc['Annual'] = np.nan
         yearly_sum.loc['Annual','Monthly Positions'] = yearly_sum['Monthly Positions'].drop('Annual',axis=0).sum()
         yearly_sum.loc['Annual','Profits'] = yearly_sum['Profits'].drop('Annual',axis=0).sum()
         yearly_sum.loc['Annual','Losses'] = yearly_sum['Losses'].drop('Annual',axis=0).sum()
-        yearly_sum.loc['Annual','Hit Percentage'] = round(yearly_sum['Hit Percentage'].mean(),5)
+        yearly_sum.loc['Annual','Hit Percentage'] = round(assist.caculate_yearly_hit_percentages(summary),4)
+        print(yearly_sum.loc['Annual','Hit Percentage'])
         yearly_sum.loc['Annual','Yield Percantage'] = round((yearly_sum.loc[12,'Neto'] - fund) * 100 / fund,2)
         print(yearly_sum.loc[12,'Neto'],fund)
         yearly_sum.loc['Annual','Commision'] = yearly_sum['Commision'].drop('Annual',axis=0).sum()
@@ -199,7 +200,10 @@ class monthlySummary:
         df = df.transpose()
         return df
 
- 
+
+
+
+
 
             
             

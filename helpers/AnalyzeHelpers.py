@@ -23,7 +23,7 @@ class AnalizeHelpers:
     def calc_yearly(self,summary: pd.DataFrame,fund:float) -> pd.DataFrame:
         anuual_summary = monthSumObj.create_df()
         anuual_summary,summaryPerMonth = monthSumObj.calc_monthly(summary,anuual_summary,fund)
-        anuual_summary = monthSumObj.calc_annual_sums(anuual_summary,fund)
+        anuual_summary = monthSumObj.calc_annual_sums(anuual_summary,summary,fund)
         hit_perc_by_30_minutes = monthSumObj.half_hour_distribution(summaryPerMonth)
         hourly_hit_percentage = monthSumObj.hour_distribution(summaryPerMonth)
         print("Proccess 2 Summarized months and year - Done:)")
