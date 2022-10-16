@@ -11,9 +11,9 @@ analize_helper = AnalizeHelpers()
 path = './Excel_files'
 file_names = next(walk(path),(None,None,[]))[2]
 # Define risk percantage
-risk = 0.004
+risk = 0.002
 # Define Starting Fund
-fund = 14300
+fund = 100000
 for filename in file_names:
     output_file_name = filename + '-Analyzed'
     summaryOrigin = pd.read_csv(f"Excel_files\\{filename}")
