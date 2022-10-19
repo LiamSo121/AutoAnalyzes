@@ -90,17 +90,17 @@ class Visual:
 
     def plot_yearly_hit(self,dict):
         sns.set_theme(style='darkgrid',rc = {'figure.figsize':(15,8)})
-        #title = "Hit Percentage per year"
-        title = "Neto by year"
+        title = "Hit Percentage per year"
+        #title = "Neto by year"
         xLable = "Year"
-        #yLable = "Hit percentage"
-        yLable = "Neto"
+        yLable = "Hit percentage"
+        #yLable = "Neto"
         plt.title(title)
         plt.xlabel(xLable)
         plt.ylabel(yLable)
 
         x_values = [year for year in dict.keys()]
-        for i in range(1,9):
+        for i in range(1,11):
             yearly_hits = []
             for year in x_values:
                 if i != 9:

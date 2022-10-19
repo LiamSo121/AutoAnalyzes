@@ -17,20 +17,6 @@ risk = 0.004
 fund = 14300
 
 
-    # output_file_name = filename + '-Analyzed'
-    # summaryOrigin = pd.read_csv(f"Outputs\\{filename}")
-    # summary = summaryOrigin.copy()
-    # # Stage 1 - Analyze daily positions
-    # summary = analize_helper.add_daily_change(summary,risk,fund)
-    # # Stage 2 - Analize Monthly
-    # yearlySum,half_hour_hit_percantage,hourly_hit_percantage = analize_helper.calc_yearly(summary,fund)
-    # # Stage 3 - Grouping By
-    # groupByType,profitsBy30Min,losesBy30Min,groupBySymbol,groupByGap = analize_helper.group_by(summary)
-    # # Stage 4 - Export all the data to xlsx file
-    # export_list = [summary,yearlySum,groupByType,profitsBy30Min,losesBy30Min,half_hour_hit_percantage,hourly_hit_percantage,groupBySymbol,groupByGap]
-    # analize_helper.export_to_excel(export_list,output_file_name)
-    #stage 5 - Visualization
-
 years_list = ['2015','2016','2017', '2018', '2019', '2020','2021']
 dict = {}
 for year in years_list:
@@ -40,7 +26,7 @@ for year in years_list:
         if year in filename:
             filename = filename[:-5] + '.xlsx'
             data = pd.read_excel(f"Outputs\\{filename}",sheet_name= 'Summary')
-            dict[year][f'0.0{i}'] = data.loc[12,'Neto']
+            dict[year][f'0.0{i}'] = data.loc[12,'Hit Percentage']
 
 
 
