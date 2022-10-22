@@ -20,7 +20,7 @@ fund = 100000
 df = pd.DataFrame(columns=['Symbol','Total Positions','Profits','Losses','Hit Percentage'])
 for filename in file_names:
     summaryOrigin = pd.read_excel(f"Outputs\\{filename}",sheet_name='Hit By Symbol')
-    summaryOrigin = summaryOrigin[summaryOrigin['Hit Percentage'] > 55]
+    summaryOrigin = summaryOrigin[summaryOrigin['Hit Percentage'] > 50]
     df = pd.concat([df,summaryOrigin])
 
 
@@ -30,5 +30,5 @@ table = pd.pivot_table(df,values=['Total Positions','Profits','Losses','Hit Perc
 df = table.reindex(table.sort_values(by=['Hit Percentage','Total Positions'], ascending=[False,False]).index)
 print(df)
 print(list(df['Symbol']))
-table.to_excel('stocks_all_years_over55.xlsx')
+table.to_excel('stocks_19-20-21Up50.xlsx')
 print('done')
