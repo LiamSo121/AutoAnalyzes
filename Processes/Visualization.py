@@ -100,7 +100,7 @@ class Visual:
         plt.ylabel(yLable)
 
         x_values = [year for year in dict.keys()]
-        for i in range(1,11):
+        for i in range(0,11):
             yearly_hits = []
             for year in x_values:
                 if i != 9:
