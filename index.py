@@ -17,18 +17,23 @@ risk = 0.002
 # Define Starting Fund
 fund = 100000
 
-df = pd.DataFrame(columns=['Symbol','Total Positions','Profits','Losses','Hit Percentage'])
+df = pd.DataFrame(columns=['Symbol','Total Positions','Profits','Losses'])
 for filename in file_names:
     summaryOrigin = pd.read_excel(f"Outputs\\{filename}",sheet_name='Hit By Symbol')
     summaryOrigin = summaryOrigin[summaryOrigin['Hit Percentage'] > 50]
     df = pd.concat([df,summaryOrigin])
 
 
-table = pd.pivot_table(df,values=['Total Positions','Profits','Losses','Hit Percentage'],index=['Symbol'],
-                        aggfunc={'Total Positions': np.sum,'Profits':np.sum,'Losses':np.sum,'Hit Percentage':np.mean}).reset_index()
+table = pd.pivot_table(df,values=['Total Positions','Profits','Losses'],index=['Symbol'],
+                        aggfunc={'Total Positions': np.sum,'Profits':np.sum,'Losses':np.sum}).reset_index()
 
-df = table.reindex(table.sort_values(by=['Hit Percentage','Total Positions'], ascending=[False,False]).index)
+
+total_Positions = np.array(table['Total Positions'])
+profits = np.array(table['Profits'])
+table['Hit Percentage'] = np.divide(profits,total_Positions) * 100
+df = table.reindex(table.sort_values(by=['Total Positions','Hit Percentage'], ascending=[False,False]).index)
 print(df)
 print(list(df['Symbol']))
 table.to_excel('stocks_19-20-21Up50.xlsx')
+
 print('done')
