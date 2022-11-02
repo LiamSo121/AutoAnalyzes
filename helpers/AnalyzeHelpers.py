@@ -16,6 +16,7 @@ class AnalizeHelpers:
         summary = summaryObj.fix_data(summary)
         summary = summaryObj.clean_data(summary)
         summary = summaryObj.calculate_pl(summary,risk,fund)
+        summary = summaryObj.take_out_stocks_under_X_hit_percent(summary)
         print("Proccess 1 Fix and add daily change - Done:)")
 
         return summary

@@ -15,7 +15,7 @@ risk = 0.002
 # Define Starting Fund
 fund = 100000
 for filename in file_names:
-    output_file_name = filename + '-Analyzed'
+    output_file_name = filename + '-Analyzed-filtered-stocks'
     summaryOrigin = pd.read_csv(f"Excel_files\\{filename}")
     
     summary = summaryOrigin.copy()
