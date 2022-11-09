@@ -31,12 +31,14 @@ class AnalizeHelpers:
         return anuual_summary,hit_perc_by_30_minutes,hourly_hit_percentage
 
     def group_by(self,summary: pd.DataFrame) -> pd.DataFrame:
-        groupByType = groupObj.groupByType(summary)
-        profitsBy30Min,losesBy30Min = groupObj.groupByTime(summary)
-        groupBySymbol = groupObj.hit_perc_by_symbol(summary)
-        group_by_gap = groupObj.group_by_gap_percent(summary)
+        # groupByType = groupObj.groupByType(summary)
+        # profitsBy30Min,losesBy30Min = groupObj.groupByTime(summary)
+        # groupBySymbol = groupObj.hit_perc_by_symbol(summary)
+        # group_by_gap = groupObj.group_by_gap_percent(summary)
+        dict_of_changes = groupObj.group_by_price_change(summary)
+        
         print("Proccess 3 Group by - Done:)")
-        return groupByType,profitsBy30Min,losesBy30Min,groupBySymbol,group_by_gap
+        #return groupByType,profitsBy30Min,losesBy30Min,groupBySymbol,group_by_gap
 
     def export_to_excel(self,export_list: list,output_file_name: str):
         sheets_names = ['Data','Summary','Type Distribution','Profits By Time','Loses By Time','Hit By 30 Minutes','Hit By 1 Hour','Hit By Symbol','Gap']

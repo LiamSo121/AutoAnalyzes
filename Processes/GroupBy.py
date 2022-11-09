@@ -6,6 +6,7 @@ from datetime import date, datetime
 import seaborn as sns
 import matplotlib.pyplot as plt
 from helpers.Assistant import Assistant
+from ast import literal_eval
 assist = Assistant()
 class GroupBy:
     
@@ -58,6 +59,21 @@ class GroupBy:
 
         return final_table 
 
+    def extract_5_values_from_json(dict:dict):
+        return dict['5-bars']
 
+    def extract_3_values_from_json(dict:dict):
+        return dict['3-bars']
 
+    def extract_7_values_from_json(dict:dict):
+        return dict['7-bars']
+
+    def group_by_price_change(self,summary: pd.DataFrame):
+        dict_of_changes = dict()
+        summary["price_change"] = summary["price_change"].apply(literal_eval)
+        dict_of_changes['3'] = list(map(GroupBy.extract_3_values_from_json,summary["price_change"]))
+        dict_of_changes['5'] = list(map(GroupBy.extract_5_values_from_json,summary["price_change"]))
+        dict_of_changes['7'] = list(map(GroupBy.extract_7_values_from_json,summary["price_change"]))
+        
+        
 
